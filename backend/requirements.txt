@@ -1,0 +1,8 @@
+# Dépendances du backend Foot Predict (Phase 3)
+# Installation : pip install -r backend/requirements.txt
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+requests>=2.31.0

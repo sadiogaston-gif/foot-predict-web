@@ -1,0 +1,21 @@
+# Render Blueprint - Foot Predict API (Phase 4)
+# Déploiement backend sur https://render.com (plan gratuit)
+
+services:
+  - type: web
+    name: foot-predict-api
+    runtime: python
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: pip install -r requirements.txt -r backend/requirements.txt
+    startCommand: uvicorn backend.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: ALLOWED_ORIGINS
+        value: https://foot-predict.vercel.app
+      - key: TZ
+        value: Europe/Paris

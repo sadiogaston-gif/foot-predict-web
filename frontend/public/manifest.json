@@ -1,0 +1,43 @@
+{
+  "name": "Foot Predict",
+  "short_name": "Foot Predict",
+  "description": "Prédictions mathématiques 1X2, Over/Under 2.5, BTTS, Value Bets sur 13 championnats européens. Modèle Elo + Time Decay + Poisson Dixon-Coles + xG.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#05070b",
+  "background_color": "#05070b",
+  "lang": "fr",
+  "categories": ["sports", "utility"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "72x72 96x96 128x128 144x144 152x152 192x192 384x384 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Matchs & Value Bets",
+      "short_name": "Matchs",
+      "description": "Voir les prédictions du jour et les value bets",
+      "url": "/?source=pwa",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Historique",
+      "short_name": "Historique",
+      "description": "Consulter les prédictions passées et les résultats",
+      "url": "/history?source=pwa",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Transparence & Bilan",
+      "short_name": "Performance",
+      "description": "Voir le bilan du backtesting et la courbe de bankroll",
+      "url": "/performance?source=pwa",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    }
+  ]
+}
