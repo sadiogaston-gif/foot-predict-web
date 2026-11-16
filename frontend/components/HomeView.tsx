@@ -6,9 +6,8 @@ import MatchCard from "@/components/MatchCard";
 import ValueBadge from "@/components/ValueBadge";
 import { formatDate } from "@/lib/format";
 import { leaguesForCountry } from "@/lib/leagues";
+import { apiGet } from "@/lib/api";
 import type { UpcomingResponse } from "@/lib/types";
-import { getMatches, getStoredLeagues } from "@/lib/db";
-import { syncUpcoming } from "@/lib/sync";
 
 function SkeletonCard() {
   return (
@@ -47,58 +46,34 @@ export default function HomeView() {
     setLeague(leaguesForCountry(nextCountry)[0]?.code ?? "ALL");
   };
 
-  /** Affiche immédiatement les affiches déjà stockées localement (hors-ligne). */
-  const loadCached = useCallback(async () => {
-    const leagues = await getStoredLeagues();
-    // Si aucun championnat n'est encore en local, on démarre avec une liste vide
-    // et on laisse la synchronisation remplir le cache.
-    if (leagues.length === 0) {
-      setData({ matches: [], count: 0, slate: { source: "cache", projected: false, note: "Aucune donnée en local." } });
-      setLoading(false);
-      return;
-    }
-    const matches = await getMatches({
-      league: league === "ALL" ? undefined : league,
-    });
-    setData({
-      matches,
-      count: matches.length,
-      slate: {
-        source: "cache",
-        projected: false,
-        note: "Données locales (hors-ligne) — synchronisez pour mettre à jour.",
-        first_date: null,
-        last_date: null,
-      },
-    });
-    setLoading(false);
-  }, [league]);
-
-  /** Synchronise avec le backend et met à jour l'affichage. */
+  /** Charge les affiches depuis le backend. */
   const syncAndUpdate = useCallback(
     async (signal: AbortSignal) => {
       setError(null);
       try {
-        const result = await syncUpcoming({
-          league: league === "ALL" ? undefined : league,
-          valueOnly,
-        });
-        setSource(result.source);
+        const params = new URLSearchParams();
+        if (league !== "ALL") params.set("league", league);
+        if (valueOnly) params.set("value_only", "true");
+        const query = params.toString();
+
+        const response = await apiGet<UpcomingResponse>(
+          `/api/matches/upcoming${query ? `?${query}` : ""}`,
+          signal,
+        );
+
+        setSource("api");
         setData({
-          matches: result.matches,
-          count: result.count,
-          slate: {
-            source: result.source,
-            projected: false,
-            note: result.error
-              ? `Réseau indisponible — affichage du cache local (${result.count} affiches).`
-              : "Données à jour depuis le backend.",
-            refreshed_at: result.syncedAt,
-            first_date: null,
-            last_date: null,
-          },
+          matches: response.matches,
+          count: response.count,
+          slate:
+            response.slate ?? {
+              source: "api",
+              projected: false,
+              note: "Données à jour depuis le backend.",
+              first_date: null,
+              last_date: null,
+            },
         });
-        if (result.error) setError(result.error);
       } catch (err: any) {
         if (signal?.aborted) return;
         setError(err?.message ?? "Échec du chargement des affiches.");
@@ -112,11 +87,9 @@ export default function HomeView() {
   const load = useCallback(
     async (signal: AbortSignal) => {
       setLoading(true);
-      await loadCached();
-      // Synchronise en arrière-plan (ne bloque pas l'affichage).
       await syncAndUpdate(signal);
     },
-    [loadCached, syncAndUpdate],
+    [syncAndUpdate],
   );
 
   useEffect(() => {
