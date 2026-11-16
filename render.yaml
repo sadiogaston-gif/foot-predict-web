@@ -1,21 +1,58 @@
-# Render Blueprint - Foot Predict API (Phase 4)
-# Déploiement backend sur https://render.com (plan gratuit)
+# Render Blueprint - Foot Predict
+# Déploiement complet : Backend FastAPI + Frontend Next.js sur Render
+#
+# Procédure :
+# 1. Poussez ce dépôt sur GitHub
+# 2. Sur Render : "New +" → "Blueprint" → connectez votre dépôt
+# 3. Render créera automatiquement les 2 services
+# 4. Après le premier déploiement, récupérez l'URL du backend (ex: https://foot-predict-api.onrender.com)
+# 5. Dans l'interface Render, mettez à jour NEXT_PUBLIC_API_URL du frontend avec cette URL
+# 6. Puis mettez à jour ALLOWED_ORIGINS du backend avec l'URL du frontend (ex: https://foot-predict-web.onrender.com)
 
 services:
+  # ---------------------------------------------------------------------------
+  # 1. BACKEND - FastAPI (Python)
+  # ---------------------------------------------------------------------------
   - type: web
     name: foot-predict-api
     runtime: python
     plan: free
     region: frankfurt
     branch: main
-    buildCommand: pip install -r requirements.txt -r backend/requirements.txt
+    buildCommand: pip install -r backend/requirements.txt
     startCommand: uvicorn backend.api:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     autoDeploy: true
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.9"
-      - key: ALLOWED_ORIGINS
-        value: https://foot-predict.vercel.app
       - key: TZ
         value: Europe/Paris
+      # Clés API - À REMPLIR dans l'interface Render (Environment Variables)
+      # NE JAMAIS les mettre en dur ici :
+      # - API_FOOTBALL_KEY
+      # - HIGHLIGHTLY_API_KEY
+      # - FOOTBALL_DATA_KEY
+      # - ODDS_API_KEY
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:3000,https://foot-predict-web.onrender.com
+
+  # ---------------------------------------------------------------------------
+  # 2. FRONTEND - Next.js (Node.js)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: foot-predict-web
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_API_URL
+        # À REMPLIR avec l'URL du backend après son premier déploiement
+        # Exemple : https://foot-predict-api.onrender.com
+        value: https://foot-predict-api.onrender.com
