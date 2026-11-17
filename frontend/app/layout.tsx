@@ -59,12 +59,12 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Foot Predict" />
       </head>
-      <body className="min-h-screen bg-ink-950 font-sans text-slate-200 antialiased">
+      <body className="min-h-screen bg-ink-950 font-sans text-slate-200 antialiased selection:bg-accent/30">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script dangerouslySetInnerHTML={{ __html: swRegisterScript }} />
         <div className="flex min-h-screen flex-col">
           <Navbar />
-          <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 pb-16 pt-8 sm:px-6 lg:px-8">
+          <main className="mx-auto w-full flex-1 px-3 pb-20 pt-8 sm:px-4 lg:px-6">
             {children}
           </main>
           <Footer />

@@ -15,8 +15,8 @@ interface Props {
 const chipClass = (active: boolean) =>
   `link-focus rounded-lg px-3 py-1.5 text-[12px] font-medium transition ${
     active
-      ? "bg-ink-700 text-fg shadow-sm"
-      : "text-slate-400 hover:bg-ink-800 hover:text-slate-200"
+      ? "bg-ink-800 text-fg shadow-sm"
+      : "text-slate-400 hover:bg-ink-800/60 hover:text-slate-200"
   }`;
 
 export default function CountryLeagueFilter({
@@ -29,9 +29,10 @@ export default function CountryLeagueFilter({
   const leagues = leaguesForCountry(country);
 
   return (
-    <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-ink-700/70 bg-ink-900/60 p-1.5">
-        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+    <section className="flex flex-col gap-4 px-4 md:px-6">
+      {/* Pays */}
+      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-ink-700/70 bg-ink-900/60 p-1.5 md:flex-row sm:flex-col md:flex-row">
+        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500 md:ml-0">
           Pays
         </span>
         <button
@@ -51,7 +52,6 @@ export default function CountryLeagueFilter({
             className={chipClass(country === name)}
           >
             {COUNTRY_FLAGS[name] ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={COUNTRY_FLAGS[name]}
                 alt=""
@@ -63,8 +63,9 @@ export default function CountryLeagueFilter({
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-ink-700/70 bg-ink-900/60 p-1.5">
-        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+      {/* Championnats */}
+      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-ink-700/70 bg-ink-900/60 p-1.5 md:flex-row sm:flex-col md:flex-row">
+        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500 md:ml-0">
           Championnat
         </span>
         {allowAllLeagues ? (
@@ -86,7 +87,7 @@ export default function CountryLeagueFilter({
             className={chipClass(league === item.code)}
           >
             <span className="mr-1.5 inline-flex items-center align-[-2px]">
-              <LeagueBadge code={item.code} size={16} />
+              <LeagueBadge code={item.code} size={14} />
             </span>
             {item.name}
           </button>
@@ -95,7 +96,7 @@ export default function CountryLeagueFilter({
           <span className="px-2 text-[12px] text-slate-500">Aucun championnat.</span>
         ) : null}
       </div>
-    </div>
+    </section>
   );
 }
 

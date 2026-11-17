@@ -4,9 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import CountryLeagueFilter from "@/components/CountryLeagueFilter";
 import MatchCard from "@/components/MatchCard";
 import ValueBadge from "@/components/ValueBadge";
+import { apiGet } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 import { leaguesForCountry } from "@/lib/leagues";
-import { apiGet } from "@/lib/api";
 import type { UpcomingResponse } from "@/lib/types";
 
 function SkeletonCard() {
@@ -46,7 +46,6 @@ export default function HomeView() {
     setLeague(leaguesForCountry(nextCountry)[0]?.code ?? "ALL");
   };
 
-  /** Charge les affiches depuis le backend. */
   const syncAndUpdate = useCallback(
     async (signal: AbortSignal) => {
       setError(null);
@@ -118,11 +117,11 @@ export default function HomeView() {
       : "—";
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* ---------------------------------------------------------------- */}
       {/* En-tête                                                          */}
       {/* ---------------------------------------------------------------- */}
-      <header className="space-y-3 relative z-30">
+      <header className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           <span className="chip border-accent/30 bg-accent/5 text-accent">
             Saison en cours
@@ -130,21 +129,21 @@ export default function HomeView() {
           <span className="chip">1X2 · Over 2.5 · BTTS</span>
           <span className="chip">13 championnats</span>
         </div>
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h1 className="text-[26px] font-semibold tracking-tight text-fg sm:text-3xl">
+        <div className="flex flex-col lg:flex-row items-end justify-between gap-3">
+          <div className="flex-1">
+            <h1 className="text-[24px] font-semibold tracking-tight text-fg sm:text-3xl">
               Matchs &amp; Value Bets
             </h1>
-            <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-slate-400">
+            <p className="mt-1.5 max-w-xl text-sm leading-relaxed text-slate-400">
               Probabilités issues du moteur Elo dynamique + Time Decay + Poisson ajusté
               Dixon-Coles, comparées aux cotes du marché. Un value bet est signalé lorsque
-              l'espérance de gain dépasse <span className="font-mono text-slate-200">+5 %</span>.
-              Les données sont stockées localement sur le téléphone et se mettent à jour
-              automatiquement lorsque le réseau est disponible.
+              l&apos;espérance de gain dépasse <span className="font-mono text-slate-200">+5 %</span>.
             </p>
           </div>
-          <div className="tnum text-right font-mono text-[11px] leading-relaxed text-slate-500">
-            <p>Journée : {dateRange}</p>
+          <div className="tnum text-right font-mono text-[11px] leading-relaxed text-slate-500 sm:text-left">
+            <p className="flex items-center justify-end sm:justify-start gap-2">
+              <span>Journée : {dateRange}</span>
+            </p>
             <p>
               {data ? `${data.count} rencontres` : "chargement…"} (
               {source === "api" ? "en ligne" : source === "cache" ? "cache local" : "—"})
@@ -191,7 +190,7 @@ export default function HomeView() {
       {/* ---------------------------------------------------------------- */}
       {/* Filtres                                                          */}
       {/* ---------------------------------------------------------------- */}
-      <section className="flex flex-col lg:flex-row gap-4 px-4 md:px-6">
+      <section className="flex flex-col lg:flex-row gap-4 px-4">
         <CountryLeagueFilter
           country={country}
           league={league}
@@ -257,7 +256,7 @@ export default function HomeView() {
       {/* Bandeau de synthèse                                              */}
       {/* ---------------------------------------------------------------- */}
       {!loading && !error && matches.length > 0 ? (
-        <section className="grid gap-3 sm:grid-cols-3">
+        <section className="grid gap-3 px-4 sm:grid-cols-3">
           <div className="card flex items-center justify-between px-4 py-3">
             <span className="text-[11px] uppercase tracking-wider text-slate-500">
               Rencontres
@@ -296,7 +295,7 @@ export default function HomeView() {
       {/* Erreur                                                           */}
       {/* ---------------------------------------------------------------- */}
       {error ? (
-        <div className="card border-danger/30 bg-danger-soft/20 p-6">
+        <div className="card border-danger/30 bg-danger-soft/20 p-6 px-4">
           <p className="text-sm font-semibold text-danger">
             {source === "cache" ? "Réseau indisponible" : "API indisponible"}
           </p>
@@ -318,7 +317,7 @@ export default function HomeView() {
       {/* Grille de matchs                                                 */}
       {/* ---------------------------------------------------------------- */}
       {loading ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
             <SkeletonCard key={index} />
           ))}
@@ -326,7 +325,7 @@ export default function HomeView() {
       ) : null}
 
       {!loading && !error && matches.length === 0 ? (
-        <div className="card flex flex-col items-center justify-center px-6 py-16 text-center">
+        <div className="card flex flex-col items-center justify-center px-6 py-20 text-center sm:px-10">
           <p className="text-sm font-medium text-slate-300">
             Aucun match ne correspond aux filtres.
           </p>
@@ -338,7 +337,7 @@ export default function HomeView() {
       ) : null}
 
       {!loading && !error && matches.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {matches.map((match) => (
             <MatchCard key={match.id} match={match} />
           ))}
