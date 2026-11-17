@@ -5,7 +5,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Backend ciblé par le proxy /api (côté serveur Next.js).
 // Modifiable via la variable d'environnement API_PROXY_TARGET.
-const BACKEND_URL = (process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8011").replace(/\/+$/, "");
+const BACKEND_URL = (process.env.API_PROXY_TARGET ?? "https://foot-predict-api-8hzu.onrender.com").replace(/\/+$/, "");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
