@@ -7,9 +7,14 @@ Lancement local :
 
 Endpoints :
     GET /api/health                    état du service et du modèle
-    GET /api/leagues                   les 5 championnats suivis
+    GET /api/leagues                   les championnats suivis
     GET /api/matches/upcoming          affiches + prédictions (filtres)
     GET /api/matches/{match_id}        analyse détaillée d'un match
+    GET /api/matches/live              scores en direct (toutes ligues)
+    GET /api/matches/live/{league}     scores en direct par championnat
+    GET /api/matches/live/{league}/fixtures  calendrier et résultats
+    GET /api/matches/live/{league}/summary   résumé détaillé d'un match
+    GET /api/matches/live/{league}/events    play-by-play d'un match
     GET /api/backtest/stats            KPIs et courbe de bankroll (Phase 2)
     GET /api/backtest/bets             historique paginé des paris simulés
 
@@ -22,6 +27,7 @@ import os
 import sys
 import threading
 from contextlib import asynccontextmanager
+from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -38,6 +44,13 @@ from backend.env import load_dotenv  # noqa: E402
 load_dotenv()
 
 from backend.service import LEAGUE_META, MARKET_LABELS, service  # noqa: E402
+from backend.livescore import (  # noqa: E402
+    get_available_leagues,
+    get_fixtures,
+    get_match_events,
+    get_match_summary,
+    get_scoreboard,
+)
 
 ALLOWED_ORIGINS = [
     origin.strip()
@@ -188,6 +201,183 @@ def match_detail(match_id: str):
                    "rechargez la liste des matchs.",
         )
     return match
+
+
+# ---------------------------------------------------------------------------
+# Matchs en direct (scores live) - Source : livescoreFootball (gratuit, sans clé)
+# ---------------------------------------------------------------------------
+@app.get("/api/matches/live", tags=["Matchs en direct"])
+def live_matches(
+    league: str | None = Query(
+        default=None,
+        description="Code championnat : E0, F1, D1, I1, SP1, etc. Vide = toutes les ligues.",
+    ),
+    date: str | None = Query(
+        default=None,
+        description="Date au format YYYYMMDD (ex: 20261117). Vide = aujourd'hui.",
+    ),
+):
+    """
+    Scores en direct et matchs du jour depuis l'API livescoreFootball (gratuite).
+
+    Retourne les matchs en cours, terminés et à venir pour le jour donné,
+    avec scores, statut, et statistiques basiques.
+
+    Source : https://github.com/rezarahiminia/livescoreFootball
+    """
+    if league and league.strip().upper() not in LEAGUE_META:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Championnat inconnu : {league}. Valeurs acceptées : {list(LEAGUE_META)}",
+        )
+
+    if league:
+        return {
+            "league": league.upper(),
+            "date": date,
+            "source": "livescoreFootball",
+            "matches": get_scoreboard(league, date),
+        }
+
+    # Toutes les ligues : on agrège les scoreboards disponibles
+    results: dict[str, Any] = {}
+    for code in LEAGUE_META:
+        results[code] = {
+            "name": LEAGUE_META[code]["name"],
+            "country": LEAGUE_META[code]["country"],
+            "matches": get_scoreboard(code, date),
+        }
+    return {
+        "date": date,
+        "source": "livescoreFootball",
+        "leagues": results,
+    }
+
+
+@app.get("/api/matches/live/{league}", tags=["Matchs en direct"])
+def live_matches_by_league(
+    league: str,
+    date: str | None = Query(
+        default=None,
+        description="Date au format YYYYMMDD (ex: 20261117). Vide = aujourd'hui.",
+    ),
+):
+    """
+    Scores en direct et matchs du jour pour un championnat donné.
+
+    Source : https://github.com/rezarahiminia/livescoreFootball
+    """
+    code = league.strip().upper()
+    if code not in LEAGUE_META:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Championnat inconnu : {league}. Valeurs acceptées : {list(LEAGUE_META)}",
+        )
+    return {
+        "league": code,
+        "name": LEAGUE_META[code]["name"],
+        "country": LEAGUE_META[code]["country"],
+        "date": date,
+        "source": "livescoreFootball",
+        "matches": get_scoreboard(code, date),
+    }
+
+
+@app.get("/api/matches/live/{league}/fixtures", tags=["Matchs en direct"])
+def live_fixtures(
+    league: str,
+    status: str = Query(
+        default="all",
+        description="Filtre par statut : all, live, finished, upcoming.",
+    ),
+    date_from: str | None = Query(
+        default=None,
+        description="Date de début au format YYYYMMDD.",
+    ),
+    date_to: str | None = Query(
+        default=None,
+        description="Date de fin au format YYYYMMDD.",
+    ),
+):
+    """
+    Calendrier et résultats d'un championnat depuis livescoreFootball.
+
+    Source : https://github.com/rezarahiminia/livescoreFootball
+    """
+    code = league.strip().upper()
+    if code not in LEAGUE_META:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Championnat inconnu : {league}. Valeurs acceptées : {list(LEAGUE_META)}",
+        )
+    return {
+        "league": code,
+        "name": LEAGUE_META[code]["name"],
+        "status": status,
+        "date_from": date_from,
+        "date_to": date_to,
+        "source": "livescoreFootball",
+        "matches": get_fixtures(code, status, date_from, date_to),
+    }
+
+
+@app.get("/api/matches/live/{league}/summary", tags=["Matchs en direct"])
+def live_match_summary(
+    league: str,
+    event: str = Query(
+        description="Identifiant de l'événement (match) sur livescoreFootball.",
+    ),
+):
+    """
+    Résumé complet d'un match : buteurs, stats, timeline, etc.
+
+    Source : https://github.com/rezarahiminia/livescoreFootball
+    """
+    code = league.strip().upper()
+    if code not in LEAGUE_META:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Championnat inconnu : {league}. Valeurs acceptées : {list(LEAGUE_META)}",
+        )
+    summary = get_match_summary(code, event)
+    if summary is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Résumé introuvable pour l'événement {event} dans {league}.",
+        )
+    return {
+        "league": code,
+        "event": event,
+        "source": "livescoreFootball",
+        "summary": summary,
+    }
+
+
+@app.get("/api/matches/live/{league}/events", tags=["Matchs en direct"])
+def live_match_events(
+    league: str,
+    event: str = Query(
+        description="Identifiant de l'événement (match) sur livescoreFootball.",
+    ),
+):
+    """
+    Play-by-play d'un match : buts, remplacements, minute, etc.
+
+    Source : https://github.com/rezarahiminia/livescoreFootball
+    """
+    code = league.strip().upper()
+    if code not in LEAGUE_META:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Championnat inconnu : {league}. Valeurs acceptées : {list(LEAGUE_META)}",
+        )
+    events = get_match_events(code, event)
+    return {
+        "league": code,
+        "event": event,
+        "source": "livescoreFootball",
+        "events": events,
+    }
 
 
 # ---------------------------------------------------------------------------
