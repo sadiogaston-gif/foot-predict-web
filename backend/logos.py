@@ -79,6 +79,27 @@ CLUB_LOGO_URLS: dict[str, str] = {
     "sochaux": "https://assets.football-logos.cc/logos/france/700x700/sochaux.77786db6.png",
     "stade-de-reims": "https://assets.football-logos.cc/logos/france/700x700/stade-de-reims.5276b3bc.png",
     "stade-lavallois": "https://assets.football-logos.cc/logos/france/700x700/stade-lavallois.7ffcc68c.png",
+    # --- Clubs de Segunda División (Espagne) ---
+    "albacete": "https://assets.football-logos.cc/logos/spain/700x700/albacete.cecf177b.png",
+    "almeria": "https://assets.football-logos.cc/logos/spain/700x700/almeria.52de5c43.png",
+    "burgos": "https://assets.football-logos.cc/logos/spain/700x700/burgos.7ba4a05c.png",
+    "cadiz": "https://assets.football-logos.cc/logos/spain/700x700/cadiz.301f5df2.png",
+    "castellon": "https://assets.football-logos.cc/logos/spain/700x700/castellon.79bbac13.png",
+    "ceuta": "https://assets.football-logos.cc/logos/spain/700x700/ceuta.a195364b.png",
+    "cordoba": "https://assets.football-logos.cc/logos/spain/700x700/cordoba.5f96fa9d.png",
+    "eibar": "https://assets.football-logos.cc/logos/spain/700x700/eibar.991c5ffa.png",
+    "eldense": "https://assets.football-logos.cc/logos/spain/700x700/eldense.2505968b.png",
+    "fc-andorra": "https://assets.football-logos.cc/logos/spain/700x700/fc-andorra.76cc0487.png",
+    "girona": "https://assets.football-logos.cc/logos/spain/700x700/girona.bd4a7faa.png",
+    "granada": "https://assets.football-logos.cc/logos/spain/700x700/granada.d3a66ec5.png",
+    "las-palmas": "https://assets.football-logos.cc/logos/spain/700x700/las-palmas.1772a616.png",
+    "leganes": "https://assets.football-logos.cc/logos/spain/700x700/leganes.4cbb7429.png",
+    "mallorca": "https://assets.football-logos.cc/logos/spain/700x700/mallorca.5c8d8dfe.png",
+    "oviedo": "https://assets.football-logos.cc/logos/spain/700x700/oviedo.f158f5bd.png",
+    "sabadell": "https://assets.football-logos.cc/logos/spain/700x700/sabadell.a42318da.png",
+    "sporting-gijon": "https://assets.football-logos.cc/logos/spain/700x700/sporting-gijon.0f1df40f.png",
+    "tenerife": "https://assets.football-logos.cc/logos/spain/700x700/tenerife.a8c9cf24.png",
+    "valladolid": "https://assets.football-logos.cc/logos/spain/700x700/valladolid.1aca82aa.png",
 }
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
