@@ -26,7 +26,7 @@ export const LEAGUES: LeagueOption[] = [
   { code: "I1", name: "Serie A", country: "Italie", logo: `${CREST}/c111.png` },
   { code: "I2", name: "Serie B", country: "Italie", logo: `${FL}/italy/700x700/serie-b.d27003ee.png` },
   { code: "SP1", name: "La Liga", country: "Espagne", logo: `${CREST}/laliga.png` },
-  { code: "SP2", name: "Segunda División", country: "Espagne", logo: `${FL}/spain/700x700/la-liga-2.f153481e.png` },
+  { code: "SP2", name: "Segunda División", country: "Espagne", logo: `${FL}/spain/700x700/la-liga-2.e0084660.png` },
   { code: "P1", name: "Primeira Liga", country: "Portugal", logo: `${CREST}/PPL.png` },
   { code: "P2", name: "Liga Portugal 2", country: "Portugal", logo: `${FL}/portugal/700x700/liga-portugal-2.1ef19ad5.png` },
   { code: "N1", name: "Eredivisie", country: "Pays-Bas", logo: `${FL}/netherlands/700x700/eredivisie.846bf0f7.png` },
