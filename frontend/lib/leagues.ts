@@ -29,7 +29,7 @@ export const LEAGUES: LeagueOption[] = [
   { code: "SP2", name: "Segunda División", country: "Espagne", logo: `${FL}/spain/256x256/la-liga-2.f153481e.png` },
   { code: "P1", name: "Primeira Liga", country: "Portugal", logo: `${CREST}/PPL.png` },
   { code: "P2", name: "Liga Portugal 2", country: "Portugal", logo: `${FL}/portugal/256x256/liga-portugal-2.1ef19ad5.png` },
-  { code: "N1", name: "Eredivisie", country: "Pays-Bas", logo: `${CREST}/ED.png` },
+  { code: "N1", name: "Eredivisie", country: "Pays-Bas", logo: `${FL}/netherlands/256x256/eredivisie.png` },
   { code: "B1", name: "Jupiler Pro League", country: "Belgique", logo: `${FL}/belgium/256x256/jupiler-pro-league.88f9b202.png` },
   { code: "T1", name: "Süper Lig", country: "Turquie", logo: `${FL}/turkey/256x256/super-lig.12fc2d7c.png` },
 ];
