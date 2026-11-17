@@ -42,7 +42,6 @@ export default function TeamBadge({ name, logo, size = 20, className = "" }: Pro
 
   if (logo && !showFallback) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={logo}
         alt=""
@@ -63,7 +62,7 @@ export default function TeamBadge({ name, logo, size = 20, className = "" }: Pro
         width: size,
         height: size,
         fontSize: Math.max(8, Math.round(size * 0.34)),
-        background: `hsl(${hue} 45% 24%)`,
+        background: `hsl(${hue} 35% 18%)`,
         color: `hsl(${hue} 80% 80%)`,
       }}
     >

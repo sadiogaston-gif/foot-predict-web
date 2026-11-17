@@ -16,7 +16,7 @@ function OddsCell({
   const isValue = book != null && fair != null && book > fair * 1.02;
   return (
     <span
-      className={`tnum font-mono text-[12px] ${
+      className={`tnum font-mono text-[11px] ${
         isValue ? "font-semibold text-accent" : "text-slate-300"
       }`}
       title={fair != null ? `Cote juste du modèle : ${odds(fair)}` : undefined}
@@ -35,7 +35,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
   return (
     <Link
       href={`/match/${match.id}`}
-      className="card group relative flex flex-col gap-4 p-4 transition duration-200 hover:-translate-y-0.5 hover:border-ink-500 hover:bg-ink-800/90 link-focus"
+      className="card group relative flex flex-col gap-4 p-4 transition duration-200 hover:-translate-y-1 hover:border-accent/50 hover:bg-ink-800 link-focus"
     >
       <div className="flex items-center justify-between gap-2">
         <span className="chip border-ink-600 bg-ink-800 text-[10px] text-slate-300">
@@ -119,17 +119,17 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-ink-700/60 pt-3">
         <div className="flex items-center gap-3 text-[11px] text-slate-400">
-          <span>
-            <span className="text-slate-500">O2.5</span>{" "}
+          <div className="flex items-center gap-2 text-[11px] text-slate-400">
+            <span className="text-slate-500">O2.5</span>
             <span className="tnum font-mono text-slate-300">{pct(match.over_2_5, 0)}</span>
-          </span>
-          <span>
-            <span className="text-slate-500">BTTS</span>{" "}
+          </div>
+          <div className="flex items-center gap-2 text-[11px] text-slate-400">
+            <span className="text-slate-500">BTTS</span>
             <span className="tnum font-mono text-slate-300">{pct(match.btts_yes, 0)}</span>
-          </span>
+          </div>
           {match.top_scores[0] ? (
-            <span className="sm:hidden">
-              <span className="text-slate-500">Score</span>{" "}
+            <span className="sm:hidden flex items-center gap-2 text-[11px] text-slate-400">
+              <span className="text-slate-500">Score</span>
               <span className="tnum font-mono text-slate-300">{match.top_scores[0].score}</span>
             </span>
           ) : null}

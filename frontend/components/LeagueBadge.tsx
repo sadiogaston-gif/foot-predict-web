@@ -10,43 +10,15 @@ interface Props {
   className?: string;
 }
 
-function hueFromCode(value: string): number {
-  let hash = 0;
-  for (let index = 0; index < value.length; index += 1) {
-    hash = (hash * 31 + value.charCodeAt(index)) % 360;
-  }
-  return hash;
-}
-
-/**
- * Mapping des codes Football-Data vers les noms sur Wikimedia Commons.
- */
-const wikimediaNames: Record<string, string> = {
-  "B1": "Jupiler Pro League",
-  "E0": "Premier League",
-  "E1": "Championship",
-  "F1": "Ligue 1",
-  "F2": "Ligue 2",
-  "D1": "Bundesliga",
-  "D2": "2. Bundesliga",
-  "I1": "Serie A",
-  "I2": "Serie B",
-  "SP1": "La Liga",
-  "SP2": "Segunda División",
-  "P1": "Primeira Liga",
-  "P2": "Liga Portugal 2",
-  "N1": "Eredivisie",
-};
-
 /**
  * Essaie de récupérer l'emblème Wikimedia pour un championnat.
  * Retourne l'URL directe ou null si non trouvé.
  */
 async function fetchWikimediaEmblem(leagueCode: string): Promise<string | null> {
-  const leagueName = wikimediaNames[leagueCode];
-  if (!leagueName) return null;
+  const league = leagueByCode(leagueCode);
+  if (!league) return null;
 
-  const searchTerm = `${leagueName} logo`;
+  const searchTerm = `${league.name} logo`;
   try {
     const response = await fetch(
       `https://commons.wikimedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&srlimit=1`,
@@ -64,8 +36,7 @@ async function fetchWikimediaEmblem(leagueCode: string): Promise<string | null> 
     const results = (data.query || {}).search || [];
     if (!results.length) return null;
 
-    const first = results[0];
-    const title = first.title || "";
+    const title = results[0].title || "";
 
     const imgResponse = await fetch(
       `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=200&titles=${encodeURIComponent(title)}&format=json`,
@@ -92,29 +63,20 @@ async function fetchWikimediaEmblem(leagueCode: string): Promise<string | null> 
 
 export default function LeagueBadge({ code, size = 16, className = "" }: Props) {
   const league = leagueByCode(code);
-  const hue = hueFromCode(code);
-
-  // État : l'image officielle a-t-elle échoué ? (initialement false)
   const [showFallback, setShowFallback] = React.useState(false);
 
   // tentative Wikimedia en arrière-plan (ne modifie pas l'affichage immédiatement)
   React.useEffect(() => {
-    if (code === "B1" || !league?.logo) {
-      fetchWikimediaEmblem(code).then((url) => {
-        // Si Wikimedia a trouvé un emblème, on peut le signaler mais on garde
-        // l'affichage actuel pour éviter les re-renders problématiques.
-        // L'URL pourrait être stockée en localStorage mais pour l'instant
-        // on se contente du badge de couleur.
-      });
-    }
+    fetchWikimediaEmblem(code).then(() => {
+      // Si Wikimedia a trouvé un emblème, on garde l'affichage actuel
+      // pour éviter les re-renders problématiques. L'URL pourrait être
+      // stockée en localStorage mais pour l'instant on se contente du badge.
+    });
   }, [code]);
 
-  // Si l'image officielle a planté (onError), on bascule sur le fallback
-  const handleImageError = () => {
-    setShowFallback(true);
-  };
+  const handleImageError = () => setShowFallback(true);
 
-  // Si showFallback est true, on affiche le badge de couleur
+  // Si l'image officielle a planté, on bascule sur le badge de couleur
   if (showFallback) {
     return (
       <span
@@ -125,8 +87,8 @@ export default function LeagueBadge({ code, size = 16, className = "" }: Props) 
           width: size,
           height: size,
           fontSize: Math.max(7, Math.round(size * 0.42)),
-          background: `hsl(${hue} 40% 26%)`,
-          color: `hsl(${hue} 75% 82%)`,
+          background: "hsl(190 60% 20%)",
+          color: "hsl(190 70% 80%)",
         }}
       >
         {code}
@@ -138,7 +100,6 @@ export default function LeagueBadge({ code, size = 16, className = "" }: Props) 
   return (
     <div className="relative">
       {league?.logo ? (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={league.logo}
           alt=""
@@ -149,7 +110,6 @@ export default function LeagueBadge({ code, size = 16, className = "" }: Props) 
         />
       ) : null}
 
-      {/* Badge de couleur en dessous ou à la place */}
       {showFallback ? (
         <span
           aria-hidden
@@ -159,8 +119,8 @@ export default function LeagueBadge({ code, size = 16, className = "" }: Props) 
             width: size,
             height: size,
             fontSize: Math.max(7, Math.round(size * 0.42)),
-            background: `hsl(${hue} 40% 26%)`,
-            color: `hsl(${hue} 75% 82%)`,
+            background: "hsl(190 20% 15%)",
+            color: "hsl(190 70% 80%)",
           }}
         >
           {code}
