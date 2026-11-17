@@ -58,6 +58,29 @@ FOOTBALL_LOGOS_COUNTRIES: dict[str, str] = {
     "T1": "turkey",
 }
 
+# Mapping explicite des logos de clubs de Ligue 2 (France) vers football-logos.cc
+# Ces URLs contiennent le hash unique requis par le CDN du site.
+CLUB_LOGO_URLS: dict[str, str] = {
+    "annecy": "https://assets.football-logos.cc/logos/france/700x700/annecy.ab76c4fd.png",
+    "as-saint-etienne": "https://assets.football-logos.cc/logos/france/700x700/as-saint-etienne.7db0202f.png",
+    "boulogne": "https://assets.football-logos.cc/logos/france/700x700/boulogne.7f7c6c66.png",
+    "clermont-foot": "https://assets.football-logos.cc/logos/france/700x700/clermont-foot.1127f5ab.png",
+    "dijon": "https://assets.football-logos.cc/logos/france/700x700/dijon.85c77ca1.png",
+    "dunkerque": "https://assets.football-logos.cc/logos/france/700x700/dunkerque.0612c2e9.png",
+    "fc-metz": "https://assets.football-logos.cc/logos/france/700x700/fc-metz.32e4cd92.png",
+    "grenoble-foot-38": "https://assets.football-logos.cc/logos/france/700x700/grenoble-foot-38.f7fb1255.png",
+    "guingamp": "https://assets.football-logos.cc/logos/france/700x700/guingamp.2a1deabe.png",
+    "montpellier": "https://assets.football-logos.cc/logos/france/700x700/montpellier.5ee70e10.png",
+    "nancy": "https://assets.football-logos.cc/logos/france/700x700/nancy.547eae9f.png",
+    "nantes": "https://assets.football-logos.cc/logos/france/700x700/nantes.c9ad5637.png",
+    "pau": "https://assets.football-logos.cc/logos/france/700x700/pau.c0fccc45.png",
+    "red-star-fc": "https://assets.football-logos.cc/logos/france/700x700/red-star-fc.de868140.png",
+    "rodez-af": "https://assets.football-logos.cc/logos/france/700x700/rodez-af.10add4b3.png",
+    "sochaux": "https://assets.football-logos.cc/logos/france/700x700/sochaux.77786db6.png",
+    "stade-de-reims": "https://assets.football-logos.cc/logos/france/700x700/stade-de-reims.5276b3bc.png",
+    "stade-lavallois": "https://assets.football-logos.cc/logos/france/700x700/stade-lavallois.7ffcc68c.png",
+}
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE_DIR = os.path.join(ROOT, "data", "logos")
 CACHE_TTL_SECONDS = 7 * 24 * 3600
@@ -212,10 +235,19 @@ class LogoProvider:
             return None
 
     def _football_logos_url(self, league_code: str, club_name: str) -> str | None:
-        """Construit une URL probable vers football-logos.cc pour un club."""
+        """Construit une URL vers football-logos.cc pour un club.
+
+        Consulte d'abord le mapping explicite des clubs connus (Ligue 2, etc.),
+        puis construit une URL par défaut si le club n'est pas référencé.
+        """
         country = FOOTBALL_LOGOS_COUNTRIES.get(league_code)
         if not country or not club_name:
             return None
+        # 1. Vérifier le mapping explicite des clubs connus
+        normalized = normalize_name(club_name)
+        if normalized in CLUB_LOGO_URLS:
+            return CLUB_LOGO_URLS[normalized]
+        # 2. Construire une URL par défaut (sans hash, peut ne pas fonctionner)
         slug = re.sub(r"[^a-z0-9]+", "-", club_name.lower().strip()).strip("-")
         if not slug:
             return None
