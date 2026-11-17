@@ -5,7 +5,7 @@
 # 1. Poussez ce dépôt sur GitHub
 # 2. Sur Render : "New +" → "Blueprint" → connectez votre dépôt
 # 3. Render créera automatiquement les 2 services
-# 4. Après le premier déploiement, récupérez l'URL du backend (ex: https://foot-predict-api.onrender.com)
+# 4. Après le premier déploiement, récupérez l'URL du backend (ex: https://foot-predict-api-8hzu.onrender.com)
 # 5. Dans l'interface Render, mettez à jour NEXT_PUBLIC_API_URL du frontend avec cette URL
 # 6. Puis mettez à jour ALLOWED_ORIGINS du backend avec l'URL du frontend (ex: https://foot-predict-web.onrender.com)
 
@@ -54,5 +54,5 @@ services:
         value: "20"
       - key: NEXT_PUBLIC_API_URL
         # À REMPLIR avec l'URL du backend après son premier déploiement
-        # Exemple : https://foot-predict-api.onrender.com
-        value: https://foot-predict-api.onrender.com
+        # Exemple : https://foot-predict-api-8hzu.onrender.com
+        value: https://foot-predict-api-8hzu.onrender.com
