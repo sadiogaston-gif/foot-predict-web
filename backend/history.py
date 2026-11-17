@@ -76,6 +76,9 @@ LEAGUE_NAMES = {
     "N1": "Eredivisie (Pays-Bas)",
     "B1": "Jupiler Pro League (Belgique)",
     "T1": "Süper Lig (Turquie)",
+    "SC0": "Scottish Premiership (Écosse)",
+    "G1": "Super League (Grèce)",
+    "T2": "1. Lig (Turquie)",
 }
 
 MARKET_LABELS = {

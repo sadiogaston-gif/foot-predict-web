@@ -43,6 +43,9 @@ LEAGUE_CODES: dict[str, str] = {
     "N1": "DED",
     "B1": "B1",
     "T1": "TR",
+    "SC0": "SCO",
+    "G1": "GRE",
+    "T2": "TR2",
 }
 
 # Codes championnat -> pays sur football-logos.cc (pour construction d'URL de secours)
@@ -56,6 +59,9 @@ FOOTBALL_LOGOS_COUNTRIES: dict[str, str] = {
     "N1": "netherlands",
     "B1": "belgium",
     "T1": "turkey",
+    "SC0": "scotland",
+    "G1": "greece",
+    "T2": "turkey",
 }
 
 # Mapping explicite des logos de clubs de Ligue 2 (France) vers football-logos.cc

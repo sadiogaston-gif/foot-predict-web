@@ -24,6 +24,9 @@ LEAGUES = {
     "Eredivisie (Pays-Bas)": {"code": "N1", "country": "Pays-Bas"},
     "Jupiler Pro League (Belgique)": {"code": "B1", "country": "Belgique"},
     "Süper Lig (Turquie)": {"code": "T1", "country": "Turquie"},
+    "Scottish Premiership (Écosse)": {"code": "SC0", "country": "Écosse"},
+    "Super League (Grèce)": {"code": "G1", "country": "Grèce"},
+    "1. Lig (Turquie)": {"code": "T2", "country": "Turquie"},
 }
 
 # Codage des saisons au format YYZZ (ex: 2024-2025 -> "2425")

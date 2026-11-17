@@ -1,0 +1,22 @@
+{
+    "mapping": {
+        "E0": "https://crests.football-data.org/PL.png",
+        "E1": "https://crests.football-data.org/ELC.png",
+        "F1": "https://crests.football-data.org/FL1.png",
+        "F2": "https://assets.football-logos.cc/logos/france/700x700/ligue-2.aef87665.png",
+        "D1": "https://crests.football-data.org/BL1.png",
+        "D2": "https://assets.football-logos.cc/logos/germany/700x700/2-bundesliga.e2512d8d.png",
+        "I1": "https://crests.football-data.org/c111.png",
+        "I2": "https://assets.football-logos.cc/logos/italy/700x700/serie-b.d27003ee.png",
+        "SP1": "https://crests.football-data.org/laliga.png",
+        "SP2": "https://assets.football-logos.cc/logos/spain/700x700/la-liga-2.e0084660.png",
+        "P1": "https://crests.football-data.org/PPL.png",
+        "P2": "https://assets.football-logos.cc/logos/portugal/700x700/liga-portugal-2.1ef19ad5.png",
+        "N1": "https://assets.football-logos.cc/logos/netherlands/700x700/eredivisie.846bf0f7.png",
+        "B1": "https://assets.football-logos.cc/logos/belgium/256x256/jupiler-pro-league.88f9b202.png",
+        "T1": "https://assets.football-logos.cc/logos/turkey/256x256/super-lig.12fc2d7c.png",
+        "SC0": "https://assets.football-logos.cc/logos/scotland/700x700/scottish-premiership.png",
+        "G1": "https://assets.football-logos.cc/logos/greece/700x700/super-league.png",
+        "T2": "https://assets.football-logos.cc/logos/turkey/700x700/first-league.png"
+    }
+}

@@ -60,6 +60,9 @@ FOOTBALL_DATA_COMPETITIONS: dict[str, str] = {
     "N1": "DED",
     "B1": "B1",
     "T1": "TR",
+    "SC0": "SCO",
+    "G1": "GRE",
+    "T2": "TR2",
 }
 
 DEFAULT_TIMEOUT = 20
@@ -81,6 +84,9 @@ LEAGUE_IDS: dict[str, int] = {
     "N1": 88,
     "B1": 123,
     "T1": 102,
+    "SC0": 172,
+    "G1": 167,
+    "T2": 103,
 }
 
 # Codes Football-Data -> (nom de ligue, pays) chez Highlightly
@@ -100,6 +106,9 @@ HIGHLIGHTLY_LEAGUES: dict[str, tuple[str, str]] = {
     "N1": ("Eredivisie", "Netherlands"),
     "B1": ("Jupiler Pro League", "Belgium"),
     "T1": ("Süper Lig", "Turkey"),
+    "SC0": ("Scottish Premiership", "Scotland"),
+    "G1": ("Super League", "Greece"),
+    "T2": ("1. Lig", "Turkey"),
 }
 
 # Durées de cache (secondes)

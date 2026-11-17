@@ -79,6 +79,9 @@ LEAGUE_META = {
     "N1": {"code": "N1", "name": "Eredivisie", "country": "Pays-Bas"},
     "B1": {"code": "B1", "name": "Jupiler Pro League", "country": "Belgique"},
     "T1": {"code": "T1", "name": "Süper Lig", "country": "Turquie"},
+    "SC0": {"code": "SC0", "name": "Scottish Premiership", "country": "Écosse"},
+    "G1": {"code": "G1", "name": "Super League", "country": "Grèce"},
+    "T2": {"code": "T2", "name": "1. Lig", "country": "Turquie"},
 }
 
 MARKET_LABELS = {
