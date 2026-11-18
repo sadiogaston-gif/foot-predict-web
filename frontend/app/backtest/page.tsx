@@ -19,15 +19,7 @@ interface LeagueRow {
   roi_kelly: number;
 }
 
-interface BacktestResponse {
-  stats: BacktestStats;
-  by_league: TypesLeagueRow[];
-  by_market: { market: string; label: string; bets: number; win_rate: number; avg_odds: number; roi_flat: number; profit_flat: number; roi_kelly: number; profit_kelly: number }[];
-  bankroll_curve: { index: number; date: string; label: string; flat: number; kelly: number }[];
-  params: { ev_threshold: number; min_odds: number; max_odds: number; initial_bankroll: number; kelly_fraction: number; kelly_cap: number };
-  generated_at: string;
-  total_bets_recorded: number;
-}
+interface BacktestResponse extends BacktestStats {}
 
 export default function BacktestPage() {
   return (
@@ -57,7 +49,7 @@ function BacktestContent() {
     setLoading(true);
     setError(null);
     try {
-      const response = await apiGet<BacktestResponse>(`/api/backtest/${league}`);
+      const response = await apiGet<BacktestResponse>(`/api/backtest/stats`);
       setData(response);
     } catch (err: any) {
       setError(err?.message ?? "Échec du chargement du backtest");
@@ -70,17 +62,29 @@ function BacktestContent() {
     load();
   }, [load]);
 
-  const stats = data?.stats;
-  const filteredLeagues: LeagueRow[] = data?.by_league.map((l: TypesLeagueRow) => ({
-    league: l.league,
-    name: l.league,
-    matches: l.bets, // Type LeagueRow from types.ts doesn't have matches, use bets as proxy
-    bets: l.bets,
-    wins: l.wins || 0,
-    win_rate: l.win_rate,
-    roi_flat: l.roi_flat,
-    roi_kelly: l.roi_kelly,
-  })) || [];
+  const stats = data;
+  const allLeagueRows: LeagueRow[] = (data?.by_league ?? []).map(
+    (l: TypesLeagueRow) => ({
+      league: l.league,
+      name: l.league,
+      matches: l.bets, // Le backend ne fournit pas le nombre de matchs par ligue
+      bets: l.bets,
+      wins: l.wins || 0,
+      win_rate: l.win_rate,
+      roi_flat: l.roi_flat,
+      roi_kelly: l.roi_kelly,
+    }),
+  );
+  // Le sélecteur ne relance pas de requête : on met la ligue choisie en avant,
+  // et on garde toutes les lignes si la ligue n'apparaît pas dans le rapport.
+  const hasSelected = allLeagueRows.some((row) => row.league === league);
+  const filteredLeagues = hasSelected
+    ? allLeagueRows.filter((row) => row.league === league)
+    : allLeagueRows;
+  const initialBankroll = stats?.params?.initial_bankroll ?? 0;
+  // Le backend renvoie `strategy_flat`/`strategy_kelly` vide si l'export manque.
+  const flat = stats?.strategy_flat ?? ({} as BacktestStats["strategy_flat"]);
+  const kelly = stats?.strategy_kelly ?? ({} as BacktestStats["strategy_kelly"]);
 
   if (loading) {
     return (
@@ -123,14 +127,18 @@ function BacktestContent() {
             ← Retour à l'accueil
           </Link>
           <h1 className="text-[24px] font-semibold tracking-tight text-fg sm:text-3xl mt-2">
-            Backtest — {league}
+            Backtest — Transparence
           </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Simulation sur l'historique : {stats.matches} matchs, {stats.bets} paris qualifiés.
+            Saison testée : {stats.season} · {stats.matches} matchs, {stats.bets} paris qualifiés.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <label className="text-[11px] text-slate-500" htmlFor="backtest-league">
+            Filtrer la ligue
+          </label>
           <select
+            id="backtest-league"
             value={league}
             onChange={(e) => window.location.href = `/backtest?league=${e.target.value}`}
             className="rounded-lg border border-ink-700/70 bg-ink-800/60 px-3 py-2 text-[12px] text-slate-300 focus:outline-none focus:ring-2 focus:ring-accent/50"
@@ -183,22 +191,22 @@ function BacktestContent() {
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             ROI Flat (Mise fixe)
           </span>
-          <span className={`tnum font-mono text-lg font-semibold ${stats.strategy_flat.roi_percent >= 0 ? "text-emerald-400" : "text-danger"}`} style={{display: "block", marginTop: "0.25rem"}}>
-            {pct(stats.strategy_flat.roi_percent)}
+          <span className={`tnum font-mono text-lg font-semibold ${(flat.roi_percent ?? 0) >= 0 ? "text-emerald-400" : "text-danger"}`} style={{display: "block", marginTop: "0.25rem"}}>
+            {pct(flat.roi_percent)}
           </span>
           <span className="text-[10px] text-slate-400 mt-1 block">
-            Bankroll: {stats.strategy_flat.final_bankroll.toFixed(2)} €
+            Bankroll: {(flat.final_bankroll ?? 0).toFixed(2)} €
           </span>
         </div>
         <div className="card p-4">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             ROI Kelly
           </span>
-          <span className={`tnum font-mono text-lg font-semibold ${stats.strategy_kelly.roi_percent >= 0 ? "text-emerald-400" : "text-danger"}`} style={{display: "block", marginTop: "0.25rem"}}>
-            {pct(stats.strategy_kelly.roi_percent)}
+          <span className={`tnum font-mono text-lg font-semibold ${(kelly.roi_percent ?? 0) >= 0 ? "text-emerald-400" : "text-danger"}`} style={{display: "block", marginTop: "0.25rem"}}>
+            {pct(kelly.roi_percent)}
           </span>
           <span className="text-[10px] text-slate-400 mt-1 block">
-            Bankroll: {stats.strategy_kelly.final_bankroll.toFixed(2)} €
+            Bankroll: {(kelly.final_bankroll ?? 0).toFixed(2)} €
           </span>
         </div>
         <div className="card p-4">
@@ -206,14 +214,14 @@ function BacktestContent() {
             Cote moyenne
           </span>
           <span className="tnum font-mono text-lg font-semibold text-fg mt-1 block">
-            {stats.avg_odds.toFixed(2)}
+            {(stats.avg_odds ?? 0).toFixed(2)}
           </span>
         </div>
         <div className="card p-4">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
             EV moyen
           </span>
-          <span className={`tnum font-mono text-lg font-semibold ${stats.avg_ev >= 0 ? "text-emerald-400" : "text-slate-300"}`} style={{display: "block", marginTop: "0.25rem"}}>
+          <span className={`tnum font-mono text-lg font-semibold ${(stats.avg_ev ?? 0) >= 0 ? "text-emerald-400" : "text-slate-300"}`} style={{display: "block", marginTop: "0.25rem"}}>
             {pct(stats.avg_ev)}
           </span>
         </div>
@@ -280,7 +288,7 @@ function BacktestContent() {
               </tr>
             </thead>
             <tbody>
-              {stats.by_market.map((row) => (
+              {(stats.by_market ?? []).map((row) => (
                 <tr key={row.market} className="border-b border-ink-700/40">
                   <td className="pb-1 text-slate-300">{row.label}</td>
                   <td className="pb-1 text-right text-slate-300">{row.bets}</td>
@@ -307,11 +315,11 @@ function BacktestContent() {
         </div>
         <div className="h-64 w-full overflow-x-auto border-b border-ink-700/70 pb-2">
           <div className="flex items-end gap-1 h-full min-w-[calc(100vw-2rem)]">
-            {stats.bankroll_curve.map((point: { index: number; flat: number; label: string }) => (
+            {(stats.bankroll_curve ?? []).map((point: { index: number; flat: number; label: string }) => (
               <div
                 key={point.index}
                 className="flex flex-col items-center gap-1"
-                style={{ height: `${(point.flat / (stats.strategy_flat.final_bankroll - stats.strategy_flat.profit)) * 100}%` }}
+                style={{ height: `${initialBankroll > 0 ? (point.flat / initialBankroll) * 100 : 0}%` }}
               >
                 <div className="w-1 bg-accent rounded-t" />
                 <span className="text-[9px] text-slate-500 rotate-[-45deg]">{point.label}</span>
@@ -319,9 +327,9 @@ function BacktestContent() {
             ))}
           </div>
           <div className="flex justify-between text-[10px] text-slate-500 mt-2">
-            <span>Bankroll initiale: {stats.strategy_flat.final_bankroll - stats.strategy_flat.profit} €</span>
-            <span>Flat: {stats.strategy_flat.final_bankroll.toFixed(2)} €</span>
-            <span>Kelly: {stats.strategy_kelly.final_bankroll.toFixed(2)} €</span>
+            <span>Bankroll initiale: {initialBankroll} €</span>
+            <span>Flat: {(flat.final_bankroll ?? 0).toFixed(2)} €</span>
+            <span>Kelly: {(kelly.final_bankroll ?? 0).toFixed(2)} €</span>
           </div>
         </div>
       </div>
