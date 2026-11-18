@@ -9,7 +9,8 @@
  * directement (ex. https://mon-service.onrender.com).
  */
 
-const RAW_API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
+const RAW_API_BASE =
+  process.env.NEXT_PUBLIC_API_URL ?? "https://foot-predict-api-8hzu.onrender.com";
 export const API_BASE = RAW_API_BASE.replace(/\/+$/, "");
 
 export class ApiError extends Error {
