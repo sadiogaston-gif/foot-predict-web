@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import LeagueBadge from "@/components/LeagueBadge";
@@ -30,6 +30,23 @@ interface BacktestResponse {
 }
 
 export default function BacktestPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex flex-col items-center justify-center py-20">
+          <div className="flex flex-col items-center gap-3">
+            <div className="flex h-8 w-8 rounded-full border-4 border-ink-700 border-t-accent animate-spin" />
+            <p className="text-sm text-slate-400">Chargement du backtest...</p>
+          </div>
+        </div>
+      }
+    >
+      <BacktestContent />
+    </Suspense>
+  );
+}
+
+function BacktestContent() {
   const [data, setData] = useState<BacktestResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
