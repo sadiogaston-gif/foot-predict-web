@@ -33,8 +33,8 @@ export const LEAGUES: LeagueOption[] = [
   { code: "B1", name: "Jupiler Pro League", country: "Belgique", logo: `${FL}/belgium/256x256/jupiler-pro-league.88f9b202.png` },
   { code: "T1", name: "Süper Lig", country: "Turquie", logo: `${FL}/turkey/700x700/super-lig.b375bfcd.png` },
   { code: "SC0", name: "Scottish Premiership", country: "Écosse", logo: `${FL}/scotland/700x700/scottish-premiership.b3d4bdfb.png` },
-  { code: "G1", name: "Super League", country: "Grèce", logo: `${FL}/greece/700x700/super-league.png` },
-  { code: "T2", name: "1. Lig", country: "Turquie", logo: `${FL}/turkey/700x700/first-league.png` },
+  { code: "G1", name: "Super League", country: "Grèce" },
+  { code: "T2", name: "1. Lig", country: "Turquie" },
 ];
 
 export const COUNTRIES: string[] = Array.from(
