@@ -180,9 +180,9 @@ export default function LeagueTeamsPage() {
                   {team.goals_for - team.goals_against}
                 </td>
                 <td className="pb-1 flex gap-1">
-                  {team.streak.streak ? (
-                    <span className={`tnum font-mono ${statusColor(team.streak.streak)}`}>
-                      {team.streak.streak}
+                  {team.streak.type ? (
+                    <span className={`tnum font-mono ${statusColor(team.streak.type)}`}>
+                      {team.streak.type}
                     </span>
                   ) : (
                     <span className="tnum font-mono text-slate-500">-</span>
@@ -229,11 +229,11 @@ export default function LeagueTeamsPage() {
               </div>
             </div>
             <div className="flex gap-1 mt-2">
-              {team.streak.streak && (
+              {team.streak.type && (
                 <span
-                  className={`tnum font-mono text-[10px] ${statusColor(team.streak.streak)}`}
+                  className={`tnum font-mono text-[10px] ${statusColor(team.streak.type)}`}
                 >
-                  {team.streak.streak} ×{team.streak.length}
+                  {team.streak.type} ×{team.streak.length}
                 </span>
               )}
             </div>

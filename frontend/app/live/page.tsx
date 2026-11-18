@@ -20,6 +20,7 @@ interface LiveMatch {
   league_code: string;
   league: string;
   date: string;
+  time: string;
 }
 
 export default function LivePage() {
@@ -52,6 +53,7 @@ export default function LivePage() {
           league_code: m.league_code,
           league: m.league,
           date: m.date,
+          time: m.time,
         }));
         setMatches(liveMatches);
       } catch (err: any) {
@@ -165,51 +167,52 @@ export default function LivePage() {
             const barWidth = `${Math.min(match.minute ?? 0, 90) / 90 * 100}%`
             return (
               <div key={match.id} className="card p-4 space-y-3">
-              <div className="flex items-start justify-between gap-2">
-                <span className="chip border-ink-600 bg-ink-800 text-[10px] text-slate-300">
-                  {match.league}
-                </span>
-                <span className={`text-[11px] font-mono ${statusColor(match.status)}`}>
-                  {match.status === "live" ? `🔴 ${match.minute}"` : match.status}
-                </span>
-              </div>
+                <div className="flex items-start justify-between gap-2">
+                  <span className="chip border-ink-600 bg-ink-800 text-[10px] text-slate-300">
+                    {match.league}
+                  </span>
+                  <span className={`text-[11px] font-mono ${statusColor(match.status)}`}>
+                    {match.status === "live" ? `🔴 ${match.minute}"` : match.status}
+                  </span>
+                </div>
 
-              <div className="flex items-center justify-between gap-3">
-                <span className="flex min-w-0 items-center gap-2">
-                  <TeamBadge name={match.home_team} logo={match.home_logo} size={20} />
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex min-w-0 items-center gap-2">
+                    <TeamBadge name={match.home_team} logo={match.home_logo} size={20} />
+                    <span className="truncate text-[15px] font-medium text-slate-300">
+                      {match.home_team}
+                    </span>
+                  </span>
+                  {match.status === "live" || match.status === "finished" ? (
+                    <div className="flex items-center gap-2 text-[20px] font-mono font-bold text-fg">
+                      {match.home_score ?? "-"}
+                      <span className="mx-1 text-slate-500">-</span>
+                      {match.away_score ?? "-"}
+                    </div>
+                  ) : (
+                    <span className="tnum font-mono text-[11px] text-slate-500">
+                      {formatDate(match.date)} · {formatTime(match.time)}
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <TeamBadge name={match.away_team} logo={match.away_logo} size={20} />
                   <span className="truncate text-[15px] font-medium text-slate-300">
-                    {match.home_team}
+                    {match.away_team}
                   </span>
-                </span>
-                {match.status === "live" || match.status === "finished" ? (
-                  <div className="flex items-center gap-2 text-[20px] font-mono font-bold text-fg">
-                    {match.home_score ?? "-"}
-                    <span className="mx-1 text-slate-500">-</span>
-                    {match.away_score ?? "-"}
+                </div>
+
+                {match.status === "live" && (
+                  <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full bg-ink-700">
+                    <div
+                      className="h-full bg-accent transition-[width] duration-1000"
+                      style={{ width: barWidth }}
+                    />
                   </div>
-                ) : (
-                  <span className="tnum font-mono text-[11px] text-slate-500">
-                    {formatDate(match.date)} · {formatTime(match.time)}
-                  </span>
                 )}
               </div>
-              <span className="flex min-w-0 items-center gap-2">
-                <TeamBadge name={match.away_team} logo={match.away_logo} size={20} />
-                <span className="truncate text-[15px] font-medium text-slate-300">
-                  {match.away_team}
-                </span>
-              </div>
-
-              {match.status === "live" && (
-                <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full bg-ink-700">
-                  <div
-                    className="h-full bg-accent transition-[width] duration-1000"
-                    style={{ width: barWidth }}
-                  />
-                </div>
-              )}
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>
