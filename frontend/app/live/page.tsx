@@ -161,8 +161,10 @@ export default function LivePage() {
         </div>
       ) : (
         <div className="grid gap-4 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((match) => (
-            <div key={match.id} className="card p-4 space-y-3">
+          {filtered.map((match) => {
+            const barWidth = `${Math.min(match.minute ?? 0, 90) / 90 * 100}%`
+            return (
+              <div key={match.id} className="card p-4 space-y-3">
               <div className="flex items-start justify-between gap-2">
                 <span className="chip border-ink-600 bg-ink-800 text-[10px] text-slate-300">
                   {match.league}
@@ -202,7 +204,7 @@ export default function LivePage() {
                 <div className="mt-2 flex h-2 w-full overflow-hidden rounded-full bg-ink-700">
                   <div
                     className="h-full bg-accent transition-[width] duration-1000"
-                    style={{ width: `${Math.min(match.minute ?? 0, 90) / 90 * 100}%` }}
+                    style={{ width: barWidth }}
                   />
                 </div>
               )}
