@@ -170,7 +170,7 @@ export default function LivePage() {
                   {match.league}
                 </span>
                 <span className={`text-[11px] font-mono ${statusColor(match.status)}`}>
-                  {match.status === "live" ? `🔴 ${match.minute}'` : match.status}
+                  {match.status === "live" ? `🔴 ${match.minute}"` : match.status}
                 </span>
               </div>
 
