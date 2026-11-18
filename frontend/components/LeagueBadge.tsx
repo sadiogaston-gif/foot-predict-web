@@ -76,6 +76,26 @@ export default function LeagueBadge({ code, size = 16, className = "" }: Props) 
 
   const handleImageError = () => setShowFallback(true);
 
+  // Pas de logo officiel → badge de couleur immédiatement
+  if (!league?.logo) {
+    return (
+      <span
+        aria-hidden
+        title={league?.name ?? code}
+        className={`flex shrink-0 items-center justify-center rounded-[4px] border border-white/10 font-mono font-semibold ${className}`}
+        style={{
+          width: size,
+          height: size,
+          fontSize: Math.max(7, Math.round(size * 0.42)),
+          background: "hsl(190 60% 20%)",
+          color: "hsl(190 70% 80%)",
+        }}
+      >
+        {code}
+      </span>
+    );
+  }
+
   // Si l'image officielle a planté, on bascule sur le badge de couleur
   if (showFallback) {
     return (
