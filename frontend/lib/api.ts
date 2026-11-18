@@ -10,7 +10,7 @@
  */
 
 const RAW_API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "https://foot-predict-api.onrender.com";
+  process.env.NEXT_PUBLIC_API_URL ?? "https://foot-predict-api-8hzu.onrender.com";
 export const API_BASE = RAW_API_BASE.replace(/\/+$/, "");
 
 export class ApiError extends Error {
