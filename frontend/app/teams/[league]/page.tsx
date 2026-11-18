@@ -209,7 +209,7 @@ export default function LeagueTeamsPage() {
               </div>
               <div className="flex items-center gap-1 text-[10px]">
                 <span className="text-slate-500">Pts:</span>
-                <span className="tnum font-mono text-fg">{team.points}</td>
+                <span className="tnum font-mono text-fg">{team.points}</span>
               </div>
               <div className="flex items-center gap-1 text-[10px]">
                 <span className="text-slate-500">BM:</span>
