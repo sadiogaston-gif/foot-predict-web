@@ -31,8 +31,8 @@ export const LEAGUES: LeagueOption[] = [
   { code: "P2", name: "Liga Portugal 2", country: "Portugal", logo: `${FL}/portugal/700x700/liga-portugal-2.1ef19ad5.png` },
   { code: "N1", name: "Eredivisie", country: "Pays-Bas", logo: `${FL}/netherlands/700x700/eredivisie.846bf0f7.png` },
   { code: "B1", name: "Jupiler Pro League", country: "Belgique", logo: `${FL}/belgium/256x256/jupiler-pro-league.88f9b202.png` },
-  { code: "T1", name: "Süper Lig", country: "Turquie", logo: `${FL}/turkey/256x256/super-lig.12fc2d7c.png` },
-  { code: "SC0", name: "Scottish Premiership", country: "Écosse", logo: `${FL}/scotland/700x700/scottish-premiership.png` },
+  { code: "T1", name: "Süper Lig", country: "Turquie", logo: `${FL}/turkey/700x700/super-lig.b375bfcd.png` },
+  { code: "SC0", name: "Scottish Premiership", country: "Écosse", logo: `${FL}/scotland/700x700/scottish-premiership.b3d4bdfb.png` },
   { code: "G1", name: "Super League", country: "Grèce", logo: `${FL}/greece/700x700/super-league.png` },
   { code: "T2", name: "1. Lig", country: "Turquie", logo: `${FL}/turkey/700x700/first-league.png` },
 ];
