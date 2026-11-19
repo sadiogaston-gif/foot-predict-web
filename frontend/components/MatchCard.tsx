@@ -128,7 +128,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
             <span className="tnum font-mono text-slate-300">{pct(match.btts_yes, 0)}</span>
           </div>
           {match.top_scores[0] ? (
-            <span className="sm:hidden flex items-center gap-2 text-[11px] text-slate-400">
+            <span className="flex items-center gap-2 text-[11px] text-slate-400">
               <span className="text-slate-500">Score</span>
               <span className="tnum font-mono text-slate-300">{match.top_scores[0].score}</span>
             </span>
