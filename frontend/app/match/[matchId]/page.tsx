@@ -122,11 +122,6 @@ export default function MatchDetailPage() {
                 away={match.probabilities.away}
                 compact
               />
-              <div className="mt-1.5 flex gap-2">
-                <span className="tnum font-mono text-[11px] text-accent">{match.probabilities.home.toFixed(0)}%</span>
-                <span className="tnum font-mono text-[11px] text-slate-400">{match.probabilities.draw.toFixed(0)}%</span>
-                <span className="tnum font-mono text-[11px] text-info">{match.probabilities.away.toFixed(0)}%</span>
-              </div>
             </div>
           </div>
           <div className="flex-1 flex flex-col items-start gap-1">
@@ -143,16 +138,29 @@ export default function MatchDetailPage() {
 
       {/* Probabilities */}
       <div className="card p-4">
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center justify-between mb-3">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-            Probabilités du modèle
+            Autres marchés du modèle
           </span>
         </div>
-        <ProbabilityBar
-          home={match.probabilities.home}
-          draw={match.probabilities.draw}
-          away={match.probabilities.away}
-        />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-lg border border-ink-700/60 bg-ink-900/40 px-3 py-2">
+            <span className="text-[10px] text-slate-500">Over 2.5</span>
+            <p className="tnum font-mono text-lg font-semibold text-fg">{pct(match.over_2_5, 0)}</p>
+          </div>
+          <div className="rounded-lg border border-ink-700/60 bg-ink-900/40 px-3 py-2">
+            <span className="text-[10px] text-slate-500">Under 2.5</span>
+            <p className="tnum font-mono text-lg font-semibold text-fg">{pct(match.under_2_5, 0)}</p>
+          </div>
+          <div className="rounded-lg border border-ink-700/60 bg-ink-900/40 px-3 py-2">
+            <span className="text-[10px] text-slate-500">BTTS oui</span>
+            <p className="tnum font-mono text-lg font-semibold text-fg">{pct(match.btts_yes, 0)}</p>
+          </div>
+          <div className="rounded-lg border border-ink-700/60 bg-ink-900/40 px-3 py-2">
+            <span className="text-[10px] text-slate-500">BTTS non</span>
+            <p className="tnum font-mono text-lg font-semibold text-fg">{pct(match.btts_no, 0)}</p>
+          </div>
+        </div>
       </div>
 
       {/* Odds grid */}
