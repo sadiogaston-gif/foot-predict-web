@@ -10,7 +10,7 @@ import ValueBadge from "@/components/ValueBadge";
 import ProbabilityBar from "@/components/ProbabilityBar";
 import ScoreHeatmap from "@/components/ScoreHeatmap";
 import { apiGet } from "@/lib/api";
-import { formatDate, formatTime, odds, pct, signedPct } from "@/lib/format";
+import { formatDate, formatKickoffTime, odds, pct, signedPct } from "@/lib/format";
 import type { MatchDetail } from "@/lib/types";
 
 export default function MatchDetailPage() {
@@ -86,7 +86,9 @@ export default function MatchDetailPage() {
         </div>
         <div className="tnum text-right font-mono text-[11px] leading-relaxed text-slate-500 sm:text-left">
           <p>{formatDate(match.date)}</p>
-          <p>{formatTime(match.time)}</p>
+          <p title="Coup d'envoi à l'heure locale de votre appareil">
+            {formatKickoffTime(match.date, match.time)}
+          </p>
         </div>
       </div>
 

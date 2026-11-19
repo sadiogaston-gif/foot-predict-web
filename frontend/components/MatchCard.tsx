@@ -4,7 +4,7 @@ import CountryFlag from "@/components/CountryFlag";
 import ProbabilityBar from "@/components/ProbabilityBar";
 import TeamBadge from "@/components/TeamBadge";
 import ValueBadge from "@/components/ValueBadge";
-import { formatDate, formatTime, odds, pct } from "@/lib/format";
+import { formatDate, formatKickoffTime, odds, pct } from "@/lib/format";
 import type { MatchSummary } from "@/lib/types";
 
 function OddsCell({
@@ -44,8 +44,11 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
           <LeagueBadge code={match.league_code} size={14} />
           {match.league}
         </span>
-        <span className="tnum font-mono text-[11px] uppercase tracking-wide text-slate-500">
-          {formatDate(match.date)} · {formatTime(match.time)}
+        <span
+          className="tnum font-mono text-[11px] uppercase tracking-wide text-slate-500"
+          title="Coup d'envoi à l'heure locale de votre appareil"
+        >
+          {formatDate(match.date)} · {formatKickoffTime(match.date, match.time)}
         </span>
       </div>
 

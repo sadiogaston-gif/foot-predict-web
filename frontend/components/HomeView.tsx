@@ -148,6 +148,9 @@ export default function HomeView() {
               {data ? `${data.count} rencontres` : "chargement…"} (
               {source === "api" ? "en ligne" : source === "cache" ? "cache local" : "—"})
             </p>
+            <p title="Les coups d'envoi sont convertis depuis l'heure de Paris vers l'heure locale de votre appareil">
+              Heures locales affichées
+            </p>
           </div>
         </div>
       </header>
@@ -158,8 +161,8 @@ export default function HomeView() {
       {slate?.note ? (
         <div
           className={`flex items-start gap-3 rounded-xl border px-4 py-3 ${
-            source === "cache"
-              ? "border-warn/25 bg-warn-soft/40"
+            slate.projected || source === "cache"
+              ? "border-warn/40 bg-warn-soft/50"
               : "border-accent/25 bg-accent-soft/20"
           }`}
         >
@@ -177,10 +180,14 @@ export default function HomeView() {
             />
           </svg>
           <p className={`text-[12px] leading-relaxed ${
-            source === "cache" ? "text-warn/90" : "text-accent/90"
+            slate.projected || source === "cache" ? "text-warn/90" : "text-accent/90"
           }`}>
             <span className="font-semibold uppercase tracking-wide">
-              {source === "cache" ? "Source des affiches — cache local" : "Source des affiches — backend"}
+              {slate.projected
+                ? "⚠ Dates de démonstration (reprojectées)"
+                : source === "cache"
+                  ? "Source des affiches — cache local"
+                  : "Source des affiches — backend"}
             </span>
             {` — ${slate.note}`}
           </p>
