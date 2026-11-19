@@ -116,10 +116,7 @@ export default function Navbar() {
       </div>
 
       {/* Voile + panneau mobile */}
-      <div
-        className={`fixed inset-0 z-[60] md:hidden pointer-events-none`}
-        aria-hidden={!isMenuOpen}
-      >
+      <div className="fixed inset-0 z-[60] md:hidden" aria-hidden={!isMenuOpen}>
         <button
           type="button"
           tabIndex={isMenuOpen ? 0 : -1}
