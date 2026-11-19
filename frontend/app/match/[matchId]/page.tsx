@@ -9,6 +9,7 @@ import CountryFlag from "@/components/CountryFlag";
 import ValueBadge from "@/components/ValueBadge";
 import ProbabilityBar from "@/components/ProbabilityBar";
 import ScoreHeatmap from "@/components/ScoreHeatmap";
+import TeamRadar from "@/components/TeamRadar";
 import { apiGet } from "@/lib/api";
 import { formatDate, formatKickoffTime, odds, pct, signedPct } from "@/lib/format";
 import type { MatchDetail } from "@/lib/types";
@@ -240,6 +241,17 @@ export default function MatchDetailPage() {
           </div>
         </div>
       )}
+
+      {/* Team radar — comparaison 7 axes façon DataMB */}
+      <div className="card p-5">
+        <div className="mb-2 flex items-baseline justify-between">
+          <h2 className="text-sm font-semibold text-fg">Profil comparatif des équipes</h2>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-slate-500">
+            7 axes
+          </span>
+        </div>
+        <TeamRadar match={match} />
+      </div>
 
       {/* Score matrix — heatmap façon ancien design */}
       <div className="card p-5">
