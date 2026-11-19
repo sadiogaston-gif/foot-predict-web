@@ -131,11 +131,11 @@ export default function Navbar() {
         />
         <div
           id="mobile-menu"
-          className={`absolute top-16 right-0 w-72 flex flex-col border-l border-b border-ink-700/60 bg-ink-950/95 backdrop-blur-md shadow-2xl transition-transform duration-300 ease-in-out z-[58] ${
-            isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          className={`absolute inset-0 w-full flex flex-col border-b border-ink-700/60 bg-ink-950/95 backdrop-blur-md shadow-2xl transition-transform duration-300 ease-in-out z-[58] ${
+            isMenuOpen ? "translate-y-0" : "-translate-y-full"
           }`}
         >
-          <nav className="w-full flex flex-col gap-1 overflow-y-auto px-4 py-4">
+          <nav className="w-full flex flex-col gap-1 overflow-y-auto px-4 py-6">
             {NAV_ITEMS.map((item) => {
               const active =
                 item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
@@ -144,7 +144,7 @@ export default function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={closeMenu}
-                  className={`link-focus flex items-center gap-2.5 rounded-lg px-4 py-3 text-sm font-medium transition ${
+                  className={`link-focus flex items-center gap-2.5 rounded-lg px-4 py-4 text-sm font-medium transition ${
                     active
                       ? "bg-ink-800 text-fg"
                       : "text-slate-400 hover:bg-ink-800/60 hover:text-slate-200"
