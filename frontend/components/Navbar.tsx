@@ -131,7 +131,7 @@ export default function Navbar() {
         />
         <div
           id="mobile-menu"
-          className={`absolute bottom-0 left-0 right-0 top-20 w-full flex flex-col border-0 bg-ink-950 shadow-2xl transition-transform duration-300 ease-in-out z-[58] ${
+          className={`absolute top-16 right-0 w-72 flex flex-col border-l border-b border-ink-700/60 bg-ink-950/95 backdrop-blur-md shadow-2xl transition-transform duration-300 ease-in-out z-[58] ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
