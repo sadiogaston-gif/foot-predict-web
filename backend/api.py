@@ -464,6 +464,23 @@ def backtest_stats():
         ) from exc
 
 
+@app.get("/api/backtest/rolling", tags=["Transparence"])
+def backtest_rolling(
+    last_n: int = Query(
+        default=30, ge=5, le=500,
+        description="Nombre des derniers paris à inclure dans le ROI glissant.",
+    ),
+):
+    """ROI glissant sur les N derniers paris simulés (lecture « forme récente »)."""
+    try:
+        return service.backtest_rolling(last_n=last_n)
+    except FileNotFoundError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail="Exports de backtest indisponibles. Lancez `python run_backtest.py`.",
+        ) from exc
+
+
 @app.get("/api/backtest/bets", tags=["Transparence"])
 def backtest_bets(
     limit: int = Query(default=100, ge=1, le=500),

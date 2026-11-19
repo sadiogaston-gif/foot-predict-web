@@ -7,7 +7,7 @@ import ValueBadge from "@/components/ValueBadge";
 import { apiGet } from "@/lib/api";
 import { formatDate } from "@/lib/format";
 import { leaguesForCountry } from "@/lib/leagues";
-import type { UpcomingResponse } from "@/lib/types";
+import type { RollingRoi, UpcomingResponse } from "@/lib/types";
 
 function SkeletonCard() {
   return (
@@ -33,6 +33,7 @@ export default function HomeView() {
   const [valueOnly, setValueOnly] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [data, setData] = useState<UpcomingResponse | null>(null);
+  const [rolling, setRolling] = useState<RollingRoi | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [source, setSource] = useState<"cache" | "api" | null>(null);
@@ -96,6 +97,15 @@ export default function HomeView() {
     load(controller.signal);
     return () => controller.abort();
   }, [load, reloadKey]);
+
+  // ROI glissant sur les 30 derniers paris (indépendant des filtres d'affiches).
+  useEffect(() => {
+    const controller = new AbortController();
+    apiGet<RollingRoi>("/api/backtest/rolling?last_n=30", controller.signal)
+      .then(setRolling)
+      .catch(() => setRolling(null));
+    return () => controller.abort();
+  }, [reloadKey]);
 
   const matches = data?.matches ?? [];
   const bestValue = useMemo(() => {
@@ -263,7 +273,7 @@ export default function HomeView() {
       {/* Bandeau de synthèse                                              */}
       {/* ---------------------------------------------------------------- */}
       {!loading && !error && matches.length > 0 ? (
-        <section className="grid gap-3 px-4 sm:grid-cols-3">
+        <section className="grid gap-3 px-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="card flex items-center justify-between px-4 py-3">
             <span className="text-[11px] uppercase tracking-wider text-slate-500">
               Rencontres
@@ -295,6 +305,35 @@ export default function HomeView() {
               <span className="font-mono text-sm text-slate-500">—</span>
             )}
           </div>
+          {rolling?.available ? (
+            <div
+              className="card flex items-center justify-between gap-3 px-4 py-3"
+              title={`ROI sur les ${rolling.bets} derniers paris (${rolling.first_date} → ${rolling.last_date}) · ${rolling.wins} gagnants · Flat / Kelly`}
+            >
+              <span className="flex flex-col">
+                <span className="text-[11px] uppercase tracking-wider text-slate-500">
+                  ROI {rolling.window} paris
+                </span>
+                <span className="text-[9px] text-slate-600">forme récente</span>
+              </span>
+              <span className="flex flex-col items-end gap-0.5">
+                <span
+                  className={`tnum font-mono text-sm font-semibold ${
+                    rolling.roi_flat >= 0 ? "text-emerald-400" : "text-danger"
+                  }`}
+                >
+                  {rolling.roi_flat >= 0 ? "+" : ""}{rolling.roi_flat.toFixed(1)}%
+                </span>
+                <span
+                  className={`tnum font-mono text-[10px] ${
+                    rolling.roi_kelly >= 0 ? "text-emerald-400/70" : "text-danger/70"
+                  }`}
+                >
+                  K {rolling.roi_kelly >= 0 ? "+" : ""}{rolling.roi_kelly.toFixed(1)}%
+                </span>
+              </span>
+            </div>
+          ) : null}
         </section>
       ) : null}
 

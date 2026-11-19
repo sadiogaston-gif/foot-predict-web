@@ -64,6 +64,20 @@ export interface UpcomingResponse {
   slate: Slate;
 }
 
+export interface RollingRoi {
+  available: boolean;
+  window: number;
+  bets: number;
+  wins: number;
+  win_rate: number;
+  roi_flat: number;
+  roi_kelly: number;
+  profit_flat: number;
+  profit_kelly: number;
+  first_date: string;
+  last_date: string;
+}
+
 export interface ScoreMatrix {
   goals: number[];
   rows: { goals_home: number; probabilities: number[] }[];

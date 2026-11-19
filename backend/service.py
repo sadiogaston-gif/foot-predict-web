@@ -1130,6 +1130,43 @@ class MatchService:
             })
         return {"total": total, "limit": limit, "offset": offset, "bets": cleaned}
 
+    def backtest_rolling(self, last_n: int = 30) -> dict:
+        """
+        ROI glissant sur les N derniers paris simulés (flat et Kelly).
+
+        Contrairement au rapport de saison complet, cet indicateur réagit vite :
+        il donne une lecture « forme récente » du modèle, comparable au rendement
+        30 jours affiché par les plateformes de pronostics.
+
+        `last_n` = nombre de paris (pas de jours calendaires) — le backtest
+        couvre une saison historique, pas un flux continu.
+        """
+        self._ensure_backtest_files()
+        bets = pd.read_csv(BACKTEST_CSV)
+        if bets.empty:
+            return {"available": False, "window": last_n}
+
+        tail = bets.tail(last_n)
+        stake_flat = float(tail["Stake_Flat"].sum())
+        profit_flat = float(tail["Profit_Flat"].sum())
+        stake_kelly = float(tail["Stake_Kelly"].sum())
+        profit_kelly = float(tail["Profit_Kelly"].sum())
+        wins = int(tail["Won"].sum())
+
+        return {
+            "available": True,
+            "window": int(len(tail)),
+            "bets": int(len(tail)),
+            "wins": wins,
+            "win_rate": round(wins / len(tail) * 100, 2) if len(tail) else 0.0,
+            "roi_flat": round(profit_flat / stake_flat * 100, 2) if stake_flat else 0.0,
+            "roi_kelly": round(profit_kelly / stake_kelly * 100, 2) if stake_kelly else 0.0,
+            "profit_flat": round(profit_flat, 2),
+            "profit_kelly": round(profit_kelly, 2),
+            "first_date": str(pd.Timestamp(tail.iloc[0]["Date"]).date()),
+            "last_date": str(pd.Timestamp(tail.iloc[-1]["Date"]).date()),
+        }
+
 
 # Accès direct pratique depuis api.py
 service = MatchService.instance()
