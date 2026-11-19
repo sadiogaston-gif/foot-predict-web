@@ -636,6 +636,7 @@ class MatchService:
             "time": _clean_str(row.get("Time")),
             "kickoff": kickoff,
             "kickoff_utc": kickoff_iso,
+            "CommenceTimeUTC": _clean_str(row.get("CommenceTimeUTC")) or None,
             "home_team": home,
             "away_team": away,
             "elo": {
@@ -715,6 +716,16 @@ class MatchService:
                 matches = [m for m in matches if m.get("is_value_bet")]
 
             matches.sort(key=lambda m: (m.get("date") or "", m.get("time") or "", m.get("league_code") or ""))
+            # Les anciens caches n'ont pas encore `kickoff_utc` : on le dérive
+            # à la volée depuis date/time (déjà convertis en heure Paris par le
+            # pipeline) pour que le frontend affiche toujours l'instant exact.
+            for match in matches:
+                if not match.get("kickoff_utc"):
+                    match["kickoff_utc"] = _kickoff_iso({
+                        "Date": match.get("date"),
+                        "Time": match.get("time"),
+                        "CommenceTimeUTC": match.get("CommenceTimeUTC"),
+                    })
             matches = [get_logo_provider().enrich(match) for match in matches]
             dates = [m["date"] for m in matches if m.get("date")]
             meta = payload.get("meta") or {}
