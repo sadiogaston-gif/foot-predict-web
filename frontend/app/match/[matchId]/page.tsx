@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import TeamBadge from "@/components/TeamBadge";
 import LeagueBadge from "@/components/LeagueBadge";
+import CountryFlag from "@/components/CountryFlag";
 import ValueBadge from "@/components/ValueBadge";
 import ProbabilityBar from "@/components/ProbabilityBar";
 import ScoreHeatmap from "@/components/ScoreHeatmap";
@@ -75,6 +76,7 @@ export default function MatchDetailPage() {
             {match.home_team} vs {match.away_team}
           </h1>
           <div className="flex items-center gap-2 mt-1">
+            <CountryFlag country={match.country} size={16} />
             <LeagueBadge code={match.league_code} size={16} />
             <span className="text-[12px] font-medium text-slate-500">{match.league}</span>
             <span className="text-[11px] px-2 py-0.5 rounded-md border border-ink-600 bg-ink-800 text-slate-500">

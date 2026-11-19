@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LeagueBadge from "@/components/LeagueBadge";
+import CountryFlag from "@/components/CountryFlag";
 import ProbabilityBar from "@/components/ProbabilityBar";
 import TeamBadge from "@/components/TeamBadge";
 import ValueBadge from "@/components/ValueBadge";
@@ -39,6 +40,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
     >
       <div className="flex items-center justify-between gap-2">
         <span className="chip border-ink-600 bg-ink-800 text-[10px] text-slate-300">
+          <CountryFlag country={match.country} size={14} />
           <LeagueBadge code={match.league_code} size={14} />
           {match.league}
         </span>
@@ -90,11 +92,19 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
         <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
           Cotes
         </span>
-        <span className="text-center font-mono text-[10px] text-slate-500">1</span>
-        <span className="text-center font-mono text-[10px] text-slate-500">X</span>
-        <span className="text-center font-mono text-[10px] text-slate-500">2</span>
+        <span className="text-center text-[10px] text-slate-500" title="Victoire domicile">
+          1
+        </span>
+        <span className="text-center text-[10px] text-slate-500" title="Match nul">
+          X
+        </span>
+        <span className="text-center text-[10px] text-slate-500" title="Victoire extérieure">
+          2
+        </span>
 
-        <span className="text-[10px] uppercase tracking-wide text-slate-500">Marché</span>
+        <span className="text-[10px] uppercase tracking-wide text-slate-500" title="Cote bookmaker">
+          Marché
+        </span>
         <span className="text-center">
           <OddsCell book={match.odds.home} fair={match.fair_odds.home} />
         </span>
@@ -120,11 +130,15 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
       <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-ink-700/60 pt-3">
         <div className="flex items-center gap-3 text-[11px] text-slate-400">
           <div className="flex items-center gap-2 text-[11px] text-slate-400">
-            <span className="text-slate-500">O2.5</span>
+            <span className="text-slate-500" title="Probabilité qu'il y ait plus de 2,5 buts dans le match">
+              +2.5 buts
+            </span>
             <span className="tnum font-mono text-slate-300">{pct(match.over_2_5, 0)}</span>
           </div>
           <div className="flex items-center gap-2 text-[11px] text-slate-400">
-            <span className="text-slate-500">BTTS</span>
+            <span className="text-slate-500" title="Probabilité que les deux équipes marquent">
+              BTTS
+            </span>
             <span className="tnum font-mono text-slate-300">{pct(match.btts_yes, 0)}</span>
           </div>
           {match.top_scores[0] ? (

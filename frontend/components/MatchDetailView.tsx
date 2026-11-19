@@ -9,6 +9,7 @@ import FormStats from "@/components/FormStats";
 import FormTable from "@/components/FormTable";
 import KellySimulator from "@/components/KellySimulator";
 import LeagueBadge from "@/components/LeagueBadge";
+import CountryFlag from "@/components/CountryFlag";
 import ScoreHeatmap from "@/components/ScoreHeatmap";
 import TeamBadge from "@/components/TeamBadge";
 import ValueBadge from "@/components/ValueBadge";
@@ -178,6 +179,7 @@ export default function MatchDetailView() {
           Tous les matchs
         </Link>
         <span className="chip border-ink-600 text-[10px]">
+          <CountryFlag country={match.country} size={14} />
           <LeagueBadge code={match.league_code} size={14} />
           {match.league} · {match.country}
         </span>
