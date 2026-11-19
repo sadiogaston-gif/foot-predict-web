@@ -33,12 +33,12 @@ export function formatTime(value?: string | null): string {
 }
 
 /**
- * Heure du coupon convertie depuis Europe/Paris vers le fuseau du navigateur.
+ * Heure du coupon convertie vers le fuseau du navigateur.
  *
- * Le backend stocke les coups d'envoi au format `YYYY-MM-DD` + `HH:MM` dans le
- * fuseau `DISPLAY_TIMEZONE` (Europe/Paris par défaut), sans indication de fuseau
- * dans la chaîne. On reconstruit l'instant UTC correspondant puis on formate dans
- * le fuseau local du visiteur.
+ * Le backend fournit désormais `kickoff_utc` (ISO 8601 avec fuseau, ex.
+ * `2026-11-20T19:30:00Z`) — instant exact issu de The Odds API quand disponible.
+ * Quand ce champ est absent (ancien cache), on reconstruit l'instant depuis
+ * `date` + `time` interprétés dans Europe/Paris (fuseau d'affichage du pipeline).
  */
 const PARIS_TZ = "Europe/Paris";
 
@@ -68,7 +68,20 @@ function zonedOffsetMs(instant: Date, timeZone: string): number {
 export function formatKickoffTime(
   date?: string | null,
   time?: string | null,
+  kickoffUtc?: string | null,
 ): string {
+  // 1) Instant exact fourni par le backend (ISO avec fuseau)
+  if (kickoffUtc) {
+    const instant = new Date(kickoffUtc);
+    if (!Number.isNaN(instant.getTime())) {
+      return new Intl.DateTimeFormat("fr-FR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(instant);
+    }
+  }
+
+  // 2) Repli depuis date + time (fuseau Paris)
   if (!date || !time || !time.includes(":")) return formatTime(time);
   const [hh, mm] = time.slice(0, 5).split(":").map(Number);
   if (!Number.isFinite(hh) || !Number.isFinite(mm)) return formatTime(time);

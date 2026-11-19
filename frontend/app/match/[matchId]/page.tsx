@@ -87,7 +87,7 @@ export default function MatchDetailPage() {
         <div className="tnum text-right font-mono text-[11px] leading-relaxed text-slate-500 sm:text-left">
           <p>{formatDate(match.date)}</p>
           <p title="Coup d'envoi à l'heure locale de votre appareil">
-            {formatKickoffTime(match.date, match.time)}
+            {formatKickoffTime(match.date, match.time, match.kickoff_utc)}
           </p>
         </div>
       </div>

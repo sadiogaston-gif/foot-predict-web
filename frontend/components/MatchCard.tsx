@@ -48,7 +48,7 @@ export default function MatchCard({ match }: { match: MatchSummary }) {
           className="tnum font-mono text-[11px] uppercase tracking-wide text-slate-500"
           title="Coup d'envoi à l'heure locale de votre appareil"
         >
-          {formatDate(match.date)} · {formatKickoffTime(match.date, match.time)}
+          {formatDate(match.date)} · {formatKickoffTime(match.date, match.time, match.kickoff_utc)}
         </span>
       </div>
 

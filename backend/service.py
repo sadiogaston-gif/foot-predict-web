@@ -135,6 +135,61 @@ def _iso(value):
     return ts.strftime("%Y-%m-%d")
 
 
+def _kickoff_iso(row: dict) -> str | None:
+    """
+    Construit le coup d'envoi au format ISO 8601 AVEC fuseau horaire.
+
+    Priorité :
+      1. `CommenceTimeUTC` (The Odds API) — instant exact en UTC ;
+      2. `Date` + `Time` interprétés dans le fuseau d'affichage du pipeline
+         (`DISPLAY_TIMEZONE`, Europe/Paris par défaut).
+
+    Le suffixe explicite (`Z` ou `+01:00`/`+02:00`) permet au frontend de
+    convertir vers l'heure locale du visiteur sans ambiguïté (hiver/été).
+    """
+    from zoneinfo import ZoneInfo  # import local : py3.9+ uniquement
+
+    display_tz = ZoneInfo(os.environ.get("DISPLAY_TIMEZONE", "Europe/Paris"))
+
+    # 1) Instant exact fourni par The Odds API
+    raw_utc = row.get("CommenceTimeUTC")
+    if raw_utc is not None and not (isinstance(raw_utc, float) and math.isnan(raw_utc)):
+        text = str(raw_utc).strip()
+        if text:
+            try:
+                if text.endswith("Z"):
+                    dt = datetime.fromisoformat(text[:-1] + "+00:00")
+                else:
+                    dt = datetime.fromisoformat(text.replace("Z", "+00:00"))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+            except (ValueError, TypeError):
+                pass
+
+    # 2) Repli : Date + Time dans le fuseau d'affichage
+    date_value = row.get("Date")
+    if date_value is None or (isinstance(date_value, float) and math.isnan(date_value)):
+        return None
+    try:
+        day = pd.Timestamp(date_value)
+    except (ValueError, TypeError):
+        return None
+    if pd.isna(day):
+        return None
+    time_txt = _clean_str(row.get("Time"))
+    hour, minute = 0, 0
+    if time_txt and ":" in time_txt:
+        try:
+            hour, minute = (int(part) for part in time_txt[:5].split(":")[:2])
+        except (ValueError, TypeError):
+            pass
+    local = datetime(
+        int(day.year), int(day.month), int(day.day), hour, minute, tzinfo=display_tz
+    )
+    return local.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
 def match_id_for(league_code, original_date, home_team, away_team):
     """
     Identifiant stable d'un match (utilisé dans /api/matches/{match_id}).
@@ -567,12 +622,9 @@ class MatchService:
             if v["qualifies"] and v["market"] in ("home", "draw", "away")
         ]
 
-        kickoff = None
-        if pd.notna(row["Date"]):
-            kickoff = pd.Timestamp(row["Date"]).strftime("%Y-%m-%d")
-            time_txt = _clean_str(row.get("Time"))
-            if time_txt and ":" in time_txt:
-                kickoff = f"{kickoff}T{time_txt[:5]}:00"
+        # Coup d'envoi au format ISO avec fuseau (instant exact quand disponible).
+        kickoff_iso = _kickoff_iso(row)
+        kickoff = kickoff_iso
 
         return {
             "id": match_id_for(league_code, row["OriginalDate"], home, away),
@@ -583,6 +635,7 @@ class MatchService:
             "date": _iso(row["Date"]),
             "time": _clean_str(row.get("Time")),
             "kickoff": kickoff,
+            "kickoff_utc": kickoff_iso,
             "home_team": home,
             "away_team": away,
             "elo": {

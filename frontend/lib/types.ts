@@ -24,6 +24,7 @@ export interface MatchSummary {
   date: string | null;
   time: string;
   kickoff: string | null;
+  kickoff_utc?: string | null;
   home_team: string;
   away_team: string;
   home_logo?: string | null;
