@@ -20,17 +20,16 @@ export default function ScoreHeatmap({ matrix }: { matrix: ScoreMatrix }) {
       <div className="min-w-[420px]">
         <div
           className="grid items-center gap-1"
-          style={{ gridTemplateColumns: `46px repeat(${goals.length}, minmax(0, 1fr))` }}
+          style={{ gridTemplateColumns: `44px repeat(${goals.length}, minmax(0, 1fr))` }}
         >
-          {/* Coin : en-têtes domicile \ extérieur */}
-          <div className="flex flex-col items-center justify-center text-center font-mono text-[9px] leading-tight uppercase tracking-wider text-slate-600">
-            <span>Dom</span>
-            <span className="text-slate-700">╲ Ext</span>
+          {/* Coin : domicile \ extérieur */}
+          <div className="text-center font-mono text-[10px] uppercase tracking-wider text-slate-600">
+            H\A
           </div>
           {goals.map((goal) => (
             <div
               key={`head-${goal}`}
-              className="text-center font-mono text-[11px] font-medium text-slate-400"
+              className="text-center font-mono text-[11px] text-slate-500"
             >
               {goal}
             </div>
@@ -38,24 +37,24 @@ export default function ScoreHeatmap({ matrix }: { matrix: ScoreMatrix }) {
 
           {matrix.rows.map((row, rowIndex) => (
             <div key={`row-${row.goals_home}`} className="contents">
-              <div className="pr-2 text-right font-mono text-[11px] font-medium text-slate-400">
+              <div className="pr-2 text-right font-mono text-[11px] text-slate-500">
                 {row.goals_home}
               </div>
               {row.probabilities.map((probability, colIndex) => {
                 const intensity = probability / max;
                 const isTop = rowIndex === topRow && colIndex === topCol;
-                // Dégradé vert : du très translucide au vert accent saturé.
-                const alpha = 0.05 + Math.pow(intensity, 0.7) * 0.65;
+                // Dégradé vert : opacité proportionnelle à la probabilité.
+                const alpha = 0.04 + intensity * 0.55;
                 return (
                   <div
                     key={`cell-${row.goals_home}-${colIndex}`}
                     className={`tnum flex aspect-square items-center justify-center rounded-md border font-mono text-[10px] transition sm:text-[11px] ${
                       isTop
-                        ? "border-accent text-accent ring-2 ring-accent/50"
-                        : "border-ink-700/40 text-slate-300 hover:border-ink-600"
+                        ? "border-accent/70 text-accent ring-1 ring-accent/40"
+                        : "border-ink-700/40 text-slate-400"
                     }`}
                     style={{ backgroundColor: `rgba(0, 224, 138, ${alpha})` }}
-                    title={`Score ${row.goals_home}-${goals[colIndex]} : ${probability.toFixed(2)} %`}
+                    title={`Score ${row.goals_home}-${goals[colIndex]} : ${probability.toFixed(2)}%`}
                   >
                     {probability >= 0.1 ? probability.toFixed(1) : "·"}
                   </div>
@@ -66,18 +65,17 @@ export default function ScoreHeatmap({ matrix }: { matrix: ScoreMatrix }) {
         </div>
 
         {/* Légende + score le plus probable */}
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-500">
+        <div className="mt-4 flex items-center justify-between text-[11px] text-slate-500">
           <span>
             Score le plus probable :{" "}
-            <span className="font-mono font-semibold text-accent">
+            <span className="font-mono text-accent">
               {topRow}-{topCol}
             </span>{" "}
-            <span className="font-mono text-slate-400">({max.toFixed(1)} %)</span>
+            ({max.toFixed(1)} %)
           </span>
           <span className="flex items-center gap-2">
-            <span>Faible</span>
-            <span className="h-2 w-20 rounded-full bg-gradient-to-r from-ink-800 via-accent/40 to-accent" />
-            <span>Fort</span>
+            <span className="h-2 w-16 rounded-full bg-gradient-to-r from-ink-800 to-accent/70" />
+            <span>probabilité</span>
           </span>
         </div>
       </div>

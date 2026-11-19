@@ -238,16 +238,18 @@ export default function MatchDetailPage() {
       )}
 
       {/* Score matrix — heatmap façon ancien design */}
-      <div className="card p-4 sm:p-5">
-        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+      <div className="card p-5">
+        <div className="flex items-baseline justify-between">
           <h2 className="text-sm font-semibold text-fg">
-            Matrice de scores (Probabilités)
+            Probabilités des scores exacts
           </h2>
           <span className="font-mono text-[10px] uppercase tracking-wider text-slate-500">
             Dixon-Coles
           </span>
         </div>
-        <ScoreHeatmap matrix={match.score_matrix} />
+        <div className="mt-4">
+          <ScoreHeatmap matrix={match.score_matrix} />
+        </div>
       </div>
 
       {/* Form section */}
