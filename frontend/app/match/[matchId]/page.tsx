@@ -8,6 +8,7 @@ import LeagueBadge from "@/components/LeagueBadge";
 import CountryFlag from "@/components/CountryFlag";
 import ValueBadge from "@/components/ValueBadge";
 import ProbabilityBar from "@/components/ProbabilityBar";
+import EloGap from "@/components/EloGap";
 import ScoreHeatmap from "@/components/ScoreHeatmap";
 import TeamRadar from "@/components/TeamRadar";
 import { apiGet } from "@/lib/api";
@@ -107,17 +108,25 @@ export default function MatchDetailPage() {
               </span>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <ProbabilityBar
-              home={match.probabilities.home}
-              draw={match.probabilities.draw}
-              away={match.probabilities.away}
-              compact
+          <div className="flex min-w-[130px] flex-col items-center gap-3">
+            <EloGap
+              home={match.elo.home}
+              away={match.elo.away}
+              homeTeam={match.home_team}
+              awayTeam={match.away_team}
             />
-            <div className="flex gap-2">
-              <span className="tnum font-mono text-[11px] text-accent">{match.probabilities.home.toFixed(0)}%</span>
-              <span className="tnum font-mono text-[11px] text-slate-400">{match.probabilities.draw.toFixed(0)}%</span>
-              <span className="tnum font-mono text-[11px] text-info">{match.probabilities.away.toFixed(0)}%</span>
+            <div className="w-full border-t border-ink-700/50 pt-3">
+              <ProbabilityBar
+                home={match.probabilities.home}
+                draw={match.probabilities.draw}
+                away={match.probabilities.away}
+                compact
+              />
+              <div className="mt-1.5 flex gap-2">
+                <span className="tnum font-mono text-[11px] text-accent">{match.probabilities.home.toFixed(0)}%</span>
+                <span className="tnum font-mono text-[11px] text-slate-400">{match.probabilities.draw.toFixed(0)}%</span>
+                <span className="tnum font-mono text-[11px] text-info">{match.probabilities.away.toFixed(0)}%</span>
+              </div>
             </div>
           </div>
           <div className="flex-1 flex flex-col items-start gap-1">
