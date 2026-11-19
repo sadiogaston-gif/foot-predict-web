@@ -7,6 +7,7 @@ import TeamBadge from "@/components/TeamBadge";
 import LeagueBadge from "@/components/LeagueBadge";
 import ValueBadge from "@/components/ValueBadge";
 import ProbabilityBar from "@/components/ProbabilityBar";
+import ScoreHeatmap from "@/components/ScoreHeatmap";
 import { apiGet } from "@/lib/api";
 import { formatDate, formatTime, odds, pct, signedPct } from "@/lib/format";
 import type { MatchDetail } from "@/lib/types";
@@ -236,39 +237,17 @@ export default function MatchDetailPage() {
         </div>
       )}
 
-      {/* Score matrix */}
-      <div className="card p-4">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+      {/* Score matrix — heatmap façon ancien design */}
+      <div className="card p-4 sm:p-5">
+        <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-sm font-semibold text-fg">
             Matrice de scores (Probabilités)
+          </h2>
+          <span className="font-mono text-[10px] uppercase tracking-wider text-slate-500">
+            Dixon-Coles
           </span>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-[10px]">
-            <thead>
-              <tr className="border-b border-ink-700/60">
-                <th className="text-left pb-1 text-slate-500">Score</th>
-                {match.score_matrix.rows.map((row) => (
-                  <th key={row.goals_home} className="text-right pb-1 w-8 text-slate-500">
-                    {row.goals_home}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {match.score_matrix.rows.map((row) => (
-                <tr key={row.goals_home} className="border-b border-ink-700/40">
-                  <td className="pb-1 text-slate-400">{row.goals_home} - X</td>
-                  {row.probabilities.map((prob) => (
-                    <td key={prob} className="text-right pb-1 text-slate-300">
-                      {prob.toFixed(2)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ScoreHeatmap matrix={match.score_matrix} />
       </div>
 
       {/* Form section */}
