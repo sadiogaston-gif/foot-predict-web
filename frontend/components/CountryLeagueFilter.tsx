@@ -1,6 +1,7 @@
 "use client";
 
 import { COUNTRIES, COUNTRY_FLAGS, leaguesForCountry, LEAGUES } from "@/lib/leagues";
+import FilterDropdown, { type DropdownOption } from "@/components/FilterDropdown";
 import LeagueBadge from "@/components/LeagueBadge";
 
 interface Props {
@@ -12,12 +13,16 @@ interface Props {
   allowAllLeagues?: boolean;
 }
 
-const chipClass = (active: boolean) =>
-  `link-focus rounded-lg px-3 py-1.5 text-[12px] font-medium transition ${
-    active
-      ? "bg-ink-800 text-fg shadow-sm"
-      : "text-slate-400 hover:bg-ink-800/60 hover:text-slate-200"
-  }`;
+function Flag({ name }: { name: string }) {
+  if (!COUNTRY_FLAGS[name]) return null;
+  return (
+    <img
+      src={COUNTRY_FLAGS[name]}
+      alt=""
+      className="h-3.5 w-5 rounded-[2px] object-cover"
+    />
+  );
+}
 
 export default function CountryLeagueFilter({
   country,
@@ -28,74 +33,42 @@ export default function CountryLeagueFilter({
 }: Props) {
   const leagues = leaguesForCountry(country);
 
-  return (
-    <section className="flex flex-col gap-4 px-4 md:px-6">
-      {/* Pays */}
-      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-ink-700/70 bg-ink-900/60 p-1.5 md:flex-row sm:flex-col md:flex-row">
-        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500 md:ml-0">
-          Pays
-        </span>
-        <button
-          type="button"
-          onClick={() => onCountryChange("ALL")}
-          aria-pressed={country === "ALL"}
-          className={chipClass(country === "ALL")}
-        >
-          Tous
-        </button>
-        {COUNTRIES.map((name) => (
-          <button
-            key={name}
-            type="button"
-            onClick={() => onCountryChange(name)}
-            aria-pressed={country === name}
-            className={chipClass(country === name)}
-          >
-            {COUNTRY_FLAGS[name] ? (
-              <img
-                src={COUNTRY_FLAGS[name]}
-                alt=""
-                className="mr-1.5 inline-block h-3 w-4 rounded-[2px] object-cover align-[-1px]"
-              />
-            ) : null}
-            {name}
-          </button>
-        ))}
-      </div>
+  const countryOptions: DropdownOption[] = [
+    { value: "ALL", label: "Tous les pays", icon: <span className="text-[13px]">🌐</span> },
+    ...COUNTRIES.map((name) => ({
+      value: name,
+      label: name,
+      icon: <Flag name={name} />,
+    })),
+  ];
 
-      {/* Championnats */}
-      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-ink-700/70 bg-ink-900/60 p-1.5 md:flex-row sm:flex-col md:flex-row">
-        <span className="px-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500 md:ml-0">
-          Championnat
-        </span>
-        {allowAllLeagues ? (
-          <button
-            type="button"
-            onClick={() => onLeagueChange("ALL")}
-            aria-pressed={league === "ALL"}
-            className={chipClass(league === "ALL")}
-          >
-            Tous
-          </button>
-        ) : null}
-        {leagues.map((item) => (
-          <button
-            key={item.code}
-            type="button"
-            onClick={() => onLeagueChange(item.code)}
-            aria-pressed={league === item.code}
-            className={chipClass(league === item.code)}
-          >
-            <span className="mr-1.5 inline-flex items-center align-[-2px]">
-              <LeagueBadge code={item.code} size={14} />
-            </span>
-            {item.name}
-          </button>
-        ))}
-        {leagues.length === 0 ? (
-          <span className="px-2 text-[12px] text-slate-500">Aucun championnat.</span>
-        ) : null}
-      </div>
+  const leagueOptions: DropdownOption[] = [
+    ...(allowAllLeagues
+      ? [{ value: "ALL", label: "Tous les championnats", icon: <span className="text-[13px]">🏆</span> }]
+      : []),
+    ...leagues.map((item) => ({
+      value: item.code,
+      label: item.name,
+      icon: <LeagueBadge code={item.code} size={16} />,
+    })),
+  ];
+
+  return (
+    <section className="flex flex-col gap-2.5 px-4 sm:flex-row sm:items-center md:px-6">
+      <FilterDropdown
+        label="Pays"
+        value={country}
+        options={countryOptions}
+        onChange={onCountryChange}
+        className="sm:w-56"
+      />
+      <FilterDropdown
+        label="Championnat"
+        value={league}
+        options={leagueOptions}
+        onChange={onLeagueChange}
+        className="sm:w-64"
+      />
     </section>
   );
 }
