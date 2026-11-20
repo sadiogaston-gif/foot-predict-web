@@ -201,7 +201,9 @@ def simulate(league_code: str, scenarios: int = 10000) -> dict:
         "teams": n_teams,
         "remaining_matches": n_outcomes,
         "skipped_matches": skipped,
-        "current_matchday": max((t["played"] for t in table.values()), default=0) // n_teams,
+        # Une « journée » = chaque équipe joue un match : le nombre de matchs
+        # joués par l'équipe ayant le plus joué donne la journée courante.
+        "current_matchday": max((t["played"] for t in table.values()), default=0),
         "title_spots": TITLE_SPOTS,
         "top4_spots": TOP4_SPOTS,
         "relegation_spots": RELEGATION_SPOTS,
