@@ -446,6 +446,42 @@ def history_matchday(
 
 
 # ---------------------------------------------------------------------------
+# Simulateur de classement (Monte Carlo)
+# ---------------------------------------------------------------------------
+@app.get("/api/simulation/{league}", tags=["Simulation"])
+def simulation_standings(
+    league: str,
+    scenarios: int = Query(
+        default=10000, ge=100, le=50000,
+        description="Nombre de scénarios Monte Carlo.",
+    ),
+):
+    """
+    Projette le classement final d'un championnat par simulation Monte Carlo.
+
+    Données : classement actuel (CSV 2627) + calendrier restant complet
+    (OpenFootball) + probabilités 1X2 du moteur. Probabilités figées.
+    Disponible pour les ligues avec calendrier OpenFootball : E0, E1, F1, D1,
+    I1, SP1, P1, N1.
+    """
+    from backend.simulation import SUPPORTED, simulate
+
+    code = league.strip().upper()
+    if code not in SUPPORTED:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Simulation indisponible pour {league}. Ligues supportées : {list(SUPPORTED)}",
+        )
+    try:
+        return simulate(code, scenarios=scenarios)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Simulation indisponible : {exc}",
+        ) from exc
+
+
+# ---------------------------------------------------------------------------
 # Backtesting / transparence
 # ---------------------------------------------------------------------------
 @app.get("/api/backtest/stats", tags=["Transparence"])

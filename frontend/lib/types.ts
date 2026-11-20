@@ -64,6 +64,33 @@ export interface UpcomingResponse {
   slate: Slate;
 }
 
+export interface SimulationStanding {
+  team: string;
+  current_points: number;
+  projected_points: number;
+  avg_position: number;
+  position_probabilities: number[];
+  title_probability: number;
+  top4_probability: number;
+  relegation_probability: number;
+}
+
+export interface SimulationResponse {
+  available: boolean;
+  reason?: string;
+  league_code?: string;
+  scenarios?: number;
+  teams?: number;
+  remaining_matches?: number;
+  skipped_matches?: number;
+  current_matchday?: number;
+  title_spots?: number;
+  top4_spots?: number;
+  relegation_spots?: number;
+  note?: string;
+  standings?: SimulationStanding[];
+}
+
 export interface RollingRoi {
   available: boolean;
   window: number;

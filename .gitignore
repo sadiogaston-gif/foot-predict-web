@@ -10,6 +10,7 @@ venv/
 frontend/node_modules/
 frontend/.next/
 frontend/out/
+frontend/tsconfig.tsbuildinfo
 
 # Données générées (trop volumineuses ou régénérées automatiquement)
 data/raw/

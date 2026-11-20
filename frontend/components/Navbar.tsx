@@ -7,6 +7,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV_ITEMS = [
   { href: "/", label: "Matchs & Value Bets" },
+  { href: "/simulation", label: "Simulation" },
   { href: "/history", label: "Historique" },
   { href: "/performance", label: "Transparence & Bilan" },
 ];
