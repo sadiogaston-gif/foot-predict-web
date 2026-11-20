@@ -218,6 +218,46 @@ class ApiFootballProvider:
         self._cache[cache_key] = (time.time(), payload)
         return payload
 
+    def head_to_head(self, team1_id: int, team2_id: int, last: int = 5) -> list[dict]:
+        """
+        Dernières confrontations directes entre deux équipes (API-Football).
+
+        Endpoint : GET /fixtures/headtohead?h2h=id1-id2&last=N
+        Retourne une liste triée du plus ancien au plus récent :
+          {date, home, away, home_goals, away_goals, status}
+        En cas d'erreur réseau/API, on renvoie une liste vide (jamais d'exception).
+        """
+        if not self.available or not team1_id or not team2_id:
+            return []
+        try:
+            payload = self._get(
+                "/fixtures/headtohead",
+                {"h2h": f"{int(team1_id)}-{int(team2_id)}", "last": int(last)},
+                TTL_MATCH,
+            )
+        except Exception:
+            return []
+        results = []
+        for fixture in payload.get("response") or []:
+            fixture_obj = fixture.get("fixture") or {}
+            teams = fixture.get("teams") or {}
+            goals = fixture.get("goals") or {}
+            home = (teams.get("home") or {}).get("name")
+            away = (teams.get("away") or {}).get("name")
+            home_goals = goals.get("home")
+            away_goals = goals.get("away")
+            if not home or not away or home_goals is None or away_goals is None:
+                continue
+            results.append({
+                "date": str(fixture_obj.get("date") or "")[:10],
+                "home": home,
+                "away": away,
+                "home_goals": int(home_goals),
+                "away_goals": int(away_goals),
+                "status": (fixture_obj.get("status") or {}).get("short") or "FT",
+            })
+        return results
+
     def _search_terms(self, fd_name: str, league_code: str) -> list[str]:
         terms: list[str] = []
         for alias in aliases_for(fd_name, league_code):
@@ -732,6 +772,7 @@ class MatchContextProvider:
             "season": _season_year(match_date),
             "teams": {"home": None, "away": None},
             "fixture": None,
+            "h2h": None,
             "squads": None,
             "injuries": None,
             "lineups": None,
@@ -799,6 +840,19 @@ class MatchContextProvider:
             if result["squads"] is None:
                 result["notes"]["squads"] = "Aucune source d'effectifs configurée."
             result["notes"]["injuries"] = "API_FOOTBALL_KEY non configurée (blessures)."
+
+        # 1b) Confrontations directes (API-Football H2H)
+        if self.api_football is not None and result["teams"].get("home") and result["teams"].get("away"):
+            try:
+                h2h = self.api_football.head_to_head(
+                    result["teams"]["home"]["id"],
+                    result["teams"]["away"]["id"],
+                    last=5,
+                )
+                if h2h:
+                    result["h2h"] = h2h
+            except Exception:
+                pass  # le H2H reste optionnel, on ne casse pas le contexte
 
         # 2) Compositions + notes (Highlightly)
         if self.highlightly is not None:

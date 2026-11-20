@@ -10,6 +10,7 @@ import ValueBadge from "@/components/ValueBadge";
 import ProbabilityBar from "@/components/ProbabilityBar";
 import EloGap from "@/components/EloGap";
 import TrendsPanel from "@/components/TrendsPanel";
+import H2HPanel from "@/components/H2HPanel";
 import ScoreHeatmap from "@/components/ScoreHeatmap";
 import TeamRadar from "@/components/TeamRadar";
 import { apiGet } from "@/lib/api";
@@ -262,6 +263,9 @@ export default function MatchDetailPage() {
 
       {/* Tendances & Séries — façon ValueStats */}
       <TrendsPanel match={match} />
+
+      {/* Confrontations directes (H2H) */}
+      <H2HPanel match={match} />
 
       {/* Team radar — comparaison 7 axes façon DataMB */}
       <div className="card p-5">

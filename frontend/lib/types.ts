@@ -221,6 +221,14 @@ export interface ExternalContext {
     away: string;
     score: { home: number | null; away: number | null };
   } | null;
+  h2h?: {
+    date: string;
+    home: string;
+    away: string;
+    home_goals: number;
+    away_goals: number;
+    status: string;
+  }[] | null;
   squads?: {
     home: ExternalSquadPlayer[] | null;
     away: ExternalSquadPlayer[] | null;
