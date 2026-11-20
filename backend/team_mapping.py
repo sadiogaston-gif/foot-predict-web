@@ -340,6 +340,55 @@ TEAM_ALIASES: dict[str, dict[str, str]] = {
         "Villarreal": "Villarreal",
         "Villarreal CF": "Villarreal",
     },
+    # ------------------------------------------------------------------ SP2
+    "SP2": {
+        "Almeria": "Almeria",
+        "UD Almeria": "Almeria",
+        "Andorra": "Andorra",
+        "FC Andorra": "Andorra",
+        "Asturias": "Oviedo",
+        "Real Oviedo": "Oviedo",
+        "Cadiz": "Cadiz",
+        "Cadiz CF": "Cadiz",
+        "Cartagena": "Cartagena",
+        "FC Cartagena": "Cartagena",
+        "Castellon": "Castellon",
+        "CD Castellon": "Castellon",
+        "Cordoba": "Cordoba",
+        "Cordoba CF": "Cordoba",
+        "Eibar": "Eibar",
+        "SD Eibar": "Eibar",
+        "Elche": "Elche",
+        "Elche CF": "Elche",
+        "Ferrol": "Ferrol",
+        "Racing de Ferrol": "Ferrol",
+        "Granada": "Granada",
+        "Granada CF": "Granada",
+        "Huesca": "Huesca",
+        "SD Huesca": "Huesca",
+        "Leganes": "Leganes",
+        "CD Leganes": "Leganes",
+        "Levante": "Levante",
+        "Levante UD": "Levante",
+        "Malaga": "Malaga",
+        "Malaga CF": "Malaga",
+        "Mirandes": "Mirandes",
+        "CD Mirandes": "Mirandes",
+        "Oviedo": "Oviedo",
+        "Real Oviedo": "Oviedo",
+        "Racing Santander": "Racing Santander",
+        "Racing de Santander": "Racing Santander",
+        "Racing Ferrol": "Racing Ferrol",
+        "Real Zaragoza": "Zaragoza",
+        "Zaragoza": "Zaragoza",
+        "Real Sociedad B": "Sociedad B",
+        "Athletic Club B": "Ath Bilbao B",
+        "Barcelona B": "Barcelona B",
+        "Villarreal B": "Villarreal B",
+        "Espanyol B": "Espanol B",
+        "Tenerife": "Tenerife",
+        "CD Tenerife": "Tenerife",
+    },
     # ------------------------------------------------------------------ P1
     "P1": {
         "Academico Viseu": "Academico Viseu",
@@ -540,7 +589,7 @@ TEAM_ALIASES: dict[str, dict[str, str]] = {
     },
 }
 
-SUPPORTED_LEAGUES = ("E0", "F1", "D1", "I1", "SP1")
+SUPPORTED_LEAGUES = ("E0", "F1", "D1", "I1", "SP1", "SP2")
 
 # Seuil de similarité difflib en dessous duquel on refuse une correspondance.
 FUZZY_CUTOFF = 0.70
