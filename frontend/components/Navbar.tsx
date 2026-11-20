@@ -95,13 +95,13 @@ export default function Navbar() {
       {/* Fond flouté discret, sans bordure marquée */}
       <div className="pointer-events-none absolute inset-0 border-b border-white/5 bg-ink-950/70 backdrop-blur-xl supports-[backdrop-filter]:bg-ink-950/50" aria-hidden />
 
-      <div className="relative z-50 mx-auto flex h-16 w-full max-w-[1400px] items-center gap-3 px-3 sm:px-6 lg:px-8">
+      <div className="relative z-50 mx-auto flex h-16 w-full max-w-[1400px] items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href="/"
-          className="link-focus group flex shrink-0 items-center gap-2.5 rounded-xl px-1.5 py-1.5 transition hover:bg-white/5"
+          className="link-focus group flex shrink-0 items-center gap-2.5 rounded-xl px-1 py-1.5 transition hover:bg-white/5 sm:px-1.5"
         >
-          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-accent/30 bg-accent-soft shadow-[0_0_20px_-6px_rgba(0,224,138,0.5)]">
+          <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-accent/30 bg-accent-soft shadow-[0_0_20px_-6px_rgba(0,224,138,0.5)] sm:h-9 sm:w-9">
             <span className="absolute inset-0 rounded-xl bg-accent/10 blur-md" aria-hidden />
             <svg viewBox="0 0 24 24" className="relative h-5 w-5 text-accent" fill="none" stroke="currentColor" strokeWidth={1.8}>
               <circle cx="12" cy="12" r="9" />
@@ -153,12 +153,12 @@ export default function Navbar() {
             </span>
             Live
           </span>
-          <ThemeToggle className="rounded-xl border border-white/10 bg-white/5 px-2 py-2 shadow-sm" />
+          <ThemeToggle className="shrink-0 rounded-xl border border-white/10 bg-white/5 shadow-sm" />
 
           {/* Bouton hamburger mobile */}
           <button
             type="button"
-            className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 shadow-sm transition hover:bg-white/10 hover:text-fg"
+            className="md:hidden flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 shadow-sm transition hover:bg-white/10 hover:text-fg"
             onClick={toggleMenu}
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isMenuOpen}
