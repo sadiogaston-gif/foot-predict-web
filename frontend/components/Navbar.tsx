@@ -91,15 +91,18 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-ink-700/60 bg-ink-950/90 backdrop-blur-lg supports-[backdrop-filter]:bg-ink-950/70">
-      <div className="relative z-50 mx-auto flex h-14 w-full max-w-[1400px] items-center gap-1 px-3 sm:gap-2 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full">
+      {/* Fond flouté discret, sans bordure marquée */}
+      <div className="pointer-events-none absolute inset-0 border-b border-white/5 bg-ink-950/70 backdrop-blur-xl supports-[backdrop-filter]:bg-ink-950/50" aria-hidden />
+
+      <div className="relative z-50 mx-auto flex h-16 w-full max-w-[1400px] items-center gap-3 px-3 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href="/"
-          className="link-focus group mr-1 flex shrink-0 items-center gap-2 rounded-lg px-1.5 py-1.5 transition hover:bg-ink-800/50 sm:mr-4 sm:gap-2.5 sm:px-2"
+          className="link-focus group flex shrink-0 items-center gap-2.5 rounded-xl px-1.5 py-1.5 transition hover:bg-white/5"
         >
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-lg border border-accent/30 bg-accent-soft">
-            <span className="absolute inset-0 rounded-lg bg-accent/10 blur-md" aria-hidden />
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-xl border border-accent/30 bg-accent-soft shadow-[0_0_20px_-6px_rgba(0,224,138,0.5)]">
+            <span className="absolute inset-0 rounded-xl bg-accent/10 blur-md" aria-hidden />
             <svg viewBox="0 0 24 24" className="relative h-5 w-5 text-accent" fill="none" stroke="currentColor" strokeWidth={1.8}>
               <circle cx="12" cy="12" r="9" />
               <path d="M12 3v4M12 17v4M3 12h4M17 12h4" strokeLinecap="round" />
@@ -107,17 +110,20 @@ export default function Navbar() {
             </svg>
           </span>
           <span className="hidden flex-col leading-none sm:flex">
-            <span className="text-[14px] font-semibold tracking-wide text-fg">
+            <span className="text-[15px] font-semibold tracking-wide text-fg">
               FOOT<span className="text-accent">PREDICT</span>
             </span>
-            <span className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500">
+            <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500">
               Elo · Poisson
             </span>
           </span>
         </Link>
 
-        {/* Onglets desktop (style Sofascore) */}
-        <nav className="hidden flex-1 items-center gap-1 md:flex" aria-label="Navigation principale">
+        {/* Pill flottante centrée (desktop) */}
+        <nav
+          className="pointer-events-auto absolute left-1/2 hidden -translate-x-1/2 items-center rounded-2xl border border-white/10 bg-ink-850/80 p-1 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6),inset_0_1px_0_0_rgba(255,255,255,0.05)] backdrop-blur-xl md:flex"
+          aria-label="Navigation principale"
+        >
           {NAV_ITEMS.map((item) => {
             const active = isActive(pathname, item.href);
             return (
@@ -125,17 +131,14 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`link-focus relative flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition ${
+                className={`link-focus relative flex items-center gap-2 rounded-xl px-3.5 py-2 text-[13px] font-medium transition-all duration-200 ${
                   active
-                    ? "bg-ink-800 text-fg"
-                    : "text-slate-400 hover:bg-ink-800/60 hover:text-slate-200"
+                    ? "bg-ink-700/80 text-fg shadow-[0_2px_10px_-3px_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.08)] ring-1 ring-white/10"
+                    : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
                 }`}
               >
                 <NavIconSvg name={item.icon} className={`h-4 w-4 ${active ? "text-accent" : ""}`} />
                 <span>{item.short}</span>
-                {active ? (
-                  <span className="absolute -bottom-[11px] left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full bg-accent" />
-                ) : null}
               </Link>
             );
           })}
@@ -143,19 +146,19 @@ export default function Navbar() {
 
         {/* Actions droites */}
         <div className="ml-auto flex items-center gap-2">
-          <span className="hidden items-center gap-1.5 rounded-full border border-accent/20 bg-accent/5 px-2.5 py-1 text-[10px] font-medium text-accent lg:flex">
+          <span className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-slate-300 shadow-sm lg:flex">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
             </span>
             Live
           </span>
-          <ThemeToggle className="px-2 py-2" />
+          <ThemeToggle className="rounded-xl border border-white/10 bg-white/5 px-2 py-2 shadow-sm" />
 
           {/* Bouton hamburger mobile */}
           <button
             type="button"
-            className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg border border-ink-600 bg-ink-800/60 text-slate-300 transition hover:bg-ink-700 hover:text-fg"
+            className="md:hidden flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 shadow-sm transition hover:bg-white/10 hover:text-fg"
             onClick={toggleMenu}
             aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={isMenuOpen}
