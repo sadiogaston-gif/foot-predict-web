@@ -95,7 +95,7 @@ export default function Navbar() {
       {/* Fond flouté discret, sans bordure marquée */}
       <div className="pointer-events-none absolute inset-0 border-b border-white/5 bg-ink-950/70 backdrop-blur-xl supports-[backdrop-filter]:bg-ink-950/50" aria-hidden />
 
-      <div className="relative z-50 mx-auto flex h-16 w-full max-w-[1400px] items-center justify-between gap-2 px-3 sm:px-6 lg:px-8">
+      <div className="relative z-50 mx-auto flex h-16 w-full max-w-[1400px] items-center gap-2 px-3 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href="/"
@@ -145,7 +145,7 @@ export default function Navbar() {
         </nav>
 
         {/* Actions droites */}
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
           <span className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-slate-300 shadow-sm lg:flex">
             <span className="relative flex h-1.5 w-1.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
@@ -153,7 +153,7 @@ export default function Navbar() {
             </span>
             Live
           </span>
-          <ThemeToggle className="shrink-0 rounded-xl border border-white/10 bg-white/5 shadow-sm" />
+          <ThemeToggle className="!flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 shadow-sm" />
 
           {/* Bouton hamburger mobile */}
           <button
