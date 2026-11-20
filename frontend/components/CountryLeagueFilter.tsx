@@ -43,7 +43,8 @@ export default function CountryLeagueFilter({
   ];
 
   const leagueOptions: DropdownOption[] = [
-    ...(allowAllLeagues
+    // « Tous les championnats » n'a de sens que si aucun pays n'est filtré.
+    ...(allowAllLeagues && country === "ALL"
       ? [{ value: "ALL", label: "Tous les championnats", icon: <span className="text-[13px]">🏆</span> }]
       : []),
     ...leagues.map((item) => ({
