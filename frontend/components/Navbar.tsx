@@ -91,7 +91,7 @@ export default function Navbar() {
   }, [isMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+    <header className="sticky top-0 z-[70] w-full">
       {/* Fond flouté discret, sans bordure marquée */}
       <div className="pointer-events-none absolute inset-0 border-b border-white/5 bg-ink-950/70 backdrop-blur-xl supports-[backdrop-filter]:bg-ink-950/50" aria-hidden />
 
@@ -183,7 +183,10 @@ export default function Navbar() {
       </div>
 
       {/* Voile + panneau mobile */}
-      <div className="fixed inset-0 z-[60] md:hidden" aria-hidden={!isMenuOpen}>
+      <div
+        className={`fixed inset-0 z-[60] md:hidden ${isMenuOpen ? "pointer-events-auto" : "pointer-events-none"}`}
+        aria-hidden={!isMenuOpen}
+      >
         <button
           type="button"
           tabIndex={isMenuOpen ? 0 : -1}
@@ -195,7 +198,7 @@ export default function Navbar() {
         />
         <div
           id="mobile-menu"
-          className={`absolute inset-0 w-full flex flex-col border-b border-ink-700/60 bg-ink-950/98 backdrop-blur-xl shadow-2xl transition-transform duration-300 ease-in-out z-[58] ${
+          className={`absolute inset-x-0 bottom-0 top-16 flex w-full flex-col border-b border-ink-700/60 bg-ink-950/98 backdrop-blur-xl shadow-2xl transition-transform duration-300 ease-in-out z-[58] ${
             isMenuOpen ? "translate-y-0" : "-translate-y-full"
           }`}
         >
