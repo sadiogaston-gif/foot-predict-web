@@ -716,6 +716,10 @@ class MatchService:
                 matches = [m for m in matches if m.get("is_value_bet")]
 
             matches.sort(key=lambda m: (m.get("date") or "", m.get("time") or "", m.get("league_code") or ""))
+            # Ne garder que les matchs à venir (date >= aujourd'hui). Les matchs
+            # déjà disputés ne doivent pas apparaître dans la liste des affiches.
+            today = date.today().isoformat()
+            matches = [m for m in matches if (m.get("date") or "") >= today]
             # Les anciens caches n'ont pas encore `kickoff_utc` : on le dérive
             # à la volée depuis date/time (déjà convertis en heure Paris par le
             # pipeline) pour que le frontend affiche toujours l'instant exact.
