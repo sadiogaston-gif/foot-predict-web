@@ -19,7 +19,12 @@ interface LeagueRow {
   roi_kelly: number;
 }
 
-interface BacktestResponse extends BacktestStats {}
+interface BacktestResponse extends BacktestStats {
+  by_league: TypesLeagueRow[];
+  by_market: { market: string; label: string; bets: number; win_rate: number; avg_odds: number; roi_flat: number; profit_flat: number; roi_kelly: number; profit_kelly: number }[];
+  bankroll_curve: { index: number; date: string; label: string; flat: number; kelly: number }[];
+  params: { ev_threshold: number; min_odds: number; max_odds: number; initial_bankroll: number; kelly_fraction: number; kelly_cap: number };
+}
 
 export default function BacktestPage() {
   return (
@@ -67,7 +72,7 @@ function BacktestContent() {
     (l: TypesLeagueRow) => ({
       league: l.league,
       name: l.league,
-      matches: l.bets, // Le backend ne fournit pas le nombre de matchs par ligue
+      matches: l.bets, // Le backend ne fournit pas le nombre de matchs par ligue, on utilise bets
       bets: l.bets,
       wins: l.wins || 0,
       win_rate: l.win_rate,

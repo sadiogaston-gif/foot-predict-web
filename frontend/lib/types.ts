@@ -66,6 +66,7 @@ export interface UpcomingResponse {
 
 export interface SimulationStanding {
   team: string;
+  logo?: string | null;
   current_points: number;
   projected_points: number;
   avg_position: number;
