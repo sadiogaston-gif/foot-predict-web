@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import TeamBadge from "@/components/TeamBadge";
 import { apiGet } from "@/lib/api";
 import { formatDate, formatTime } from "@/lib/format";
@@ -27,19 +28,21 @@ export default function LivePage() {
   const [matches, setMatches] = useState<LiveMatch[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filterStatus, setFilterStatus] = useState<string>("ALL");
-  const [filterLeague, setFilterLeague] = useState<string>("ALL");
+  const searchParams = useSearchParams();
+  const [filterStatus, setFilterStatus] = useState<string>(searchParams.get("status") || "ALL");
+  const [filterLeague, setFilterLeague] = useState<string>(searchParams.get("league") || "ALL");
 
   const load = useCallback(
     async (signal: AbortSignal) => {
       setLoading(true);
       setError(null);
       try {
-        const response = await apiGet<MatchSummary[]>(
-          "/api/matches/live",
-          signal,
-        );
-        // map vers LiveMatch
+        const params = new URLSearchParams();
+        if (filterStatus !== "ALL") params.set("status", filterStatus);
+        if (filterLeague !== "ALL") params.set("league", filterLeague);
+        const query = params.toString();
+        const url = query ? `/api/matches/live?${query}` : "/api/matches/live";
+        const response = await apiGet<MatchSummary[]>(url, signal);
         const liveMatches: LiveMatch[] = (response as any[]).map((m: any) => ({
           id: m.id,
           home_team: m.home_team,
@@ -62,7 +65,7 @@ export default function LivePage() {
         setLoading(false);
       }
     },
-    [],
+    [filterStatus, filterLeague],
   );
 
   useEffect(() => {
@@ -131,7 +134,13 @@ export default function LivePage() {
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={filterLeague}
-            onChange={(e) => setFilterLeague(e.target.value)}
+            onChange={(e) => {
+              setFilterLeague(e.target.value);
+              const params = new URLSearchParams(searchParams);
+              if (e.target.value === "ALL") params.delete("league");
+              else params.set("league", e.target.value);
+              window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
+            }}
             className="rounded-lg border border-ink-700/70 bg-ink-800/60 px-3 py-2 text-[12px] text-slate-300 focus:outline-none focus:ring-2 focus:ring-accent/50"
           >
             <option value="ALL">Tous les championnats</option>
@@ -143,7 +152,13 @@ export default function LivePage() {
           </select>
           <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => {
+              setFilterStatus(e.target.value);
+              const params = new URLSearchParams(searchParams);
+              if (e.target.value === "ALL") params.delete("status");
+              else params.set("status", e.target.value);
+              window.history.replaceState({}, "", `${window.location.pathname}?${params.toString()}`);
+            }}
             className="rounded-lg border border-ink-700/70 bg-ink-800/60 px-3 py-2 text-[12px] text-slate-300 focus:outline-none focus:ring-2 focus:ring-accent/50"
           >
             <option value="ALL">Tous les statuts</option>
