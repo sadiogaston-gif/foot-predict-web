@@ -89,10 +89,11 @@ export function formatKickoffTime(
     }
   }
 
-  // 2) Repli depuis date + time : l'heure 'time' du backend est déjà l'heure locale
-  // du championnat (ex: 21:00 pour l'Espagne, même fuseau que Paris).
-  // On l'affiche telle quelle sans conversion erronée.
-  return formatTime(time);
+  // 2) Repli : 'time' du backend est déjà l'heure locale du championnat
+  // (ex: 21:00 pour l'Espagne). On l'affiche telle quelle SANS passer par formatTime()
+  // qui l'interprète à tort comme UTC.
+  if (!time) return "—";
+  return time.slice(0, 5);
 }
 
 export function pct(value: number | null | undefined, digits = 1): string {
