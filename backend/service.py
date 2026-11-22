@@ -178,7 +178,7 @@ def _kickoff_iso(row: dict) -> str | None:
     if pd.isna(day):
         return None
     time_txt = _clean_str(row.get("Time"))
-    hour, minute = 0, 0
+    hour, minute = 21, 0  # Heure par défaut 21h (prime time Ligue 1/La Liga) au lieu de minuit
     if time_txt and ":" in time_txt:
         try:
             hour, minute = (int(part) for part in time_txt[:5].split(":")[:2])
