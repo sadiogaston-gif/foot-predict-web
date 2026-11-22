@@ -89,29 +89,10 @@ export function formatKickoffTime(
     }
   }
 
-  // 2) Repli depuis date + time (fuseau Paris)
-  if (!date || !time || !time.includes(":")) return formatTime(time);
-  const [hh, mm] = time.slice(0, 5).split(":").map(Number);
-  if (!Number.isFinite(hh) || !Number.isFinite(mm)) return formatTime(time);
-
-  const y = Number(date.slice(0, 4));
-  const mo = Number(date.slice(5, 7)) - 1;
-  const d = Number(date.slice(8, 10));
-  if (!Number.isFinite(y) || !Number.isFinite(mo) || !Number.isFinite(d)) {
-    return formatTime(time);
-  }
-
-  // Heure "naïve" (telle qu'affichée à Paris) interprétée comme UTC.
-  let naive = Date.UTC(y, mo, d, hh, mm, 0);
-  // Deux passes : l'offset d'été/hiver dépend de l'instant, on converge vite.
-  for (let i = 0; i < 2; i += 1) {
-    naive = Date.UTC(y, mo, d, hh, mm, 0) - zonedOffsetMs(new Date(naive), PARIS_TZ);
-  }
-
-  return new Intl.DateTimeFormat("fr-FR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(naive));
+  // 2) Repli depuis date + time : l'heure 'time' du backend est déjà l'heure locale
+  // du championnat (ex: 21:00 pour l'Espagne, même fuseau que Paris).
+  // On l'affiche telle quelle sans conversion erronée.
+  return formatTime(time);
 }
 
 export function pct(value: number | null | undefined, digits = 1): string {
