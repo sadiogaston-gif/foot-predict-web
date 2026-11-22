@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import LeagueBadge from "@/components/LeagueBadge";
+import TeamBadge from "@/components/TeamBadge";
 import { apiGet } from "@/lib/api";
 import { pct } from "@/lib/format";
 import { LEAGUES } from "@/lib/leagues";
@@ -163,7 +163,7 @@ function SimulationContent() {
                       </td>
                       <td className="px-3 py-2">
                         <span className="flex items-center gap-2">
-                          <LeagueBadge code={league} size={14} />
+                          <TeamBadge name={row.team} logo={row.logo} size={14} />
                           <span className="font-medium text-slate-200">{row.team}</span>
                         </span>
                       </td>

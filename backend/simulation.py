@@ -30,6 +30,7 @@ import pandas as pd
 from backend.fixtures_openfootball import LEAGUE_FILES, current_season_label, _load_league
 from backend.team_mapping import map_fixture_teams
 from backend.service import service
+from backend.logos import get_provider as get_logo_provider
 from config import SEASONS
 
 # Ligues avec calendrier OpenFootball complet
@@ -193,6 +194,11 @@ def simulate(league_code: str, scenarios: int = 10000) -> dict:
         })
 
     standings.sort(key=lambda r: r["avg_position"])
+
+    # Ajouter le logo de chaque équipe via le provider de logos
+    logo_provider = get_logo_provider()
+    for standing in standings:
+        standing["logo"] = logo_provider.logo_for(standing["team"], league_code)
 
     result = {
         "available": True,

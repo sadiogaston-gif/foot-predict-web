@@ -14,7 +14,7 @@ import ScoreHeatmap from "@/components/ScoreHeatmap";
 import TeamBadge from "@/components/TeamBadge";
 import ValueBadge from "@/components/ValueBadge";
 import { apiGet } from "@/lib/api";
-import { formatLongDate, formatTime, odds, pct, signedPct } from "@/lib/format";
+import { formatLongDate, formatKickoffTime, odds, pct, signedPct } from "@/lib/format";
 import type { MatchDetail, MarketKey, ValueBet } from "@/lib/types";
 
 const MARKET_TITLES: Record<MarketKey, string> = {
@@ -189,7 +189,7 @@ export default function MatchDetailView() {
       <section className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink-700/60 px-5 py-3">
           <p className="tnum font-mono text-[11px] uppercase tracking-wide text-slate-500">
-            {formatLongDate(match.date)} · {formatTime(match.time)}
+            {formatLongDate(match.date)} · {formatKickoffTime(match.date, match.time, match.kickoff_utc)}
           </p>
           <p className="font-mono text-[11px] text-slate-500">
             λ dom. {match.lambdas.home.toFixed(2)} · λ ext. {match.lambdas.away.toFixed(2)}

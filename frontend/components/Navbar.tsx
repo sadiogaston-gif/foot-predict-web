@@ -146,13 +146,6 @@ export default function Navbar() {
 
         {/* Actions droites */}
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-          <span className="hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-medium text-slate-300 shadow-sm lg:flex">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
-            </span>
-            Live
-          </span>
           <ThemeToggle className="!flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 shadow-sm" />
 
           {/* Bouton hamburger mobile */}

@@ -29,7 +29,15 @@ export function formatLongDate(value?: string | null): string {
 
 export function formatTime(value?: string | null): string {
   if (!value) return "—";
-  return value.slice(0, 5);
+  // L'heure provient du backend au format "HH:MM" (heure du Royaume-Uni / GMT).
+  // On interprète comme UTC et on convertit vers le fuseau local du navigateur
+  // afin d'afficher l'heure correcte (ex: 23h à Paris au lieu de 22h GMT).
+  const parsed = new Date(`1970-01-01T${value.slice(0, 5)}:00Z`);
+  if (Number.isNaN(parsed.getTime())) return value.slice(0, 5);
+  return new Intl.DateTimeFormat("fr-FR", {
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(parsed);
 }
 
 /**
